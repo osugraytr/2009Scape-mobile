@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:gravity="center">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:fontFamily="@font/noto_sans_bold"
+		android:text="2009Scape"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:textSize="40sp" />
+
+	<TextView
+		android:id="@+id/startscreen_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:fontFamily="@font/noto_sans_bold"
+		android:text="Unoffical Mobile Client" />
+
+	<ProgressBar
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_marginTop="20dp"
+		android:id="@+id/startscreenProgress"
+		android:visibility="invisible"/>
+
+</LinearLayout>
+

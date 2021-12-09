@@ -1,0 +1,19 @@
+Executable : C:\Users\Anon\AppData\Local\Android\Sdk\ndk\21.4.7075529\ndk-build.cmd
+arguments : 
+NDK_PROJECT_PATH=null
+APP_BUILD_SCRIPT=C:\Users\Anon\StudioProjects\PojavLauncher\app_2009scape\src\main\jni\Android.mk
+NDK_APPLICATION_MK=C:\Users\Anon\StudioProjects\PojavLauncher\app_2009scape\src\main\jni\Application.mk
+APP_ABI=armeabi-v7a
+NDK_ALL_ABIS=armeabi-v7a
+NDK_DEBUG=1
+APP_PLATFORM=android-21
+NDK_OUT=C:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj
+NDK_LIBS_OUT=C:\Users\Anon\StudioProjects\PojavLauncher\app_2009scape\build\intermediates\ndkBuild\debug\lib
+awt_headless
+awt_xawt
+istdio
+pojavexec
+pojavexec_awt
+xhook
+jvmArgs : 
+

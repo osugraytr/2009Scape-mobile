@@ -1,0 +1,2 @@
+process_begin: CreateProcess(NULL, (rm C:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/src/main/jni/../jniLibs/*/libawt_headless.so), ...) failed.
+make: C:\Users\Anon\StudioProjects\PojavLauncher\app_2009scape\src\main\jni\Android.mk:77: pipe: No error

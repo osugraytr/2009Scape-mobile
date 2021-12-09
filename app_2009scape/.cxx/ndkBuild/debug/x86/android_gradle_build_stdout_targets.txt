@@ -1,0 +1,8 @@
+
+make: Nothing to be done for 'awt_headless'.
+make: Nothing to be done for 'awt_xawt'.
+[x86] Compile        : istdio <= stdio_is.c
+[x86] SharedLibrary  : libistdio.so
+make: Nothing to be done for 'pojavexec'.
+make: Nothing to be done for 'pojavexec_awt'.
+make: Nothing to be done for 'xhook'.

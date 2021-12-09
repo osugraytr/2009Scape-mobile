@@ -1,0 +1,2 @@
+C:\Users\Anon\StudioProjects\PojavLauncher\app_2009scape\src\main\jni\Android.mk
+C:\Users\Anon\StudioProjects\PojavLauncher\app_2009scape\src\main\jni\Application.mk
