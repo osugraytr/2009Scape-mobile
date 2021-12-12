@@ -1,8 +1,9 @@
 /.gradle
+/app_2009scape/.cxx/
+app_2009scape/.cxx/
 /build
 /*/build
-app_pojavlauncher/src/main/assets/components/jre
+app_2009scape/src/main/assets/components/jre
 local.properties
 .idea/
-app_pojavlauncher/.cxx/
 .vs/
