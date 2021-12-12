@@ -1,1 +1,1 @@
-C:\Users\Anon\StudioProjects\PojavLauncher\app_2009scape\build\intermediates\ndkBuild\debug\obj\local\armeabi-v7a
+C:\Users\Anon\Projects\2009scape-mobile\app_2009scape\build\intermediates\ndkBuild\debug\obj\local\armeabi-v7a

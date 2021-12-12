@@ -1,34 +1,34 @@
 {
   "buildFiles": [
-    "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
-    "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Application.mk"
+    "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
+    "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Application.mk"
   ],
   "cleanCommandsComponents": [
     [
       "C:\\Users\\Anon\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\ndk-build.cmd",
       "NDK_PROJECT_PATH\u003dnull",
-      "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
-      "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Application.mk",
+      "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
+      "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Application.mk",
       "APP_ABI\u003darmeabi-v7a",
       "NDK_ALL_ABIS\u003darmeabi-v7a",
       "NDK_DEBUG\u003d1",
       "APP_PLATFORM\u003dandroid-21",
-      "NDK_OUT\u003dC:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj",
-      "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
+      "NDK_OUT\u003dC:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj",
+      "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
       "clean"
     ]
   ],
   "buildTargetsCommandComponents": [
     "C:\\Users\\Anon\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\ndk-build.cmd",
     "NDK_PROJECT_PATH\u003dnull",
-    "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
-    "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Application.mk",
+    "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
+    "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Application.mk",
     "APP_ABI\u003darmeabi-v7a",
     "NDK_ALL_ABIS\u003darmeabi-v7a",
     "NDK_DEBUG\u003d1",
     "APP_PLATFORM\u003dandroid-21",
-    "NDK_OUT\u003dC:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj",
-    "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
+    "NDK_OUT\u003dC:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj",
+    "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
     "{LIST_OF_TARGETS_TO_BUILD}"
   ],
   "libraries": {
@@ -37,18 +37,18 @@
       "buildCommandComponents": [
         "C:\\Users\\Anon\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\ndk-build.cmd",
         "NDK_PROJECT_PATH\u003dnull",
-        "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
-        "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Application.mk",
+        "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
+        "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Application.mk",
         "APP_ABI\u003darmeabi-v7a",
         "NDK_ALL_ABIS\u003darmeabi-v7a",
         "NDK_DEBUG\u003d1",
         "APP_PLATFORM\u003dandroid-21",
-        "NDK_OUT\u003dC:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj",
-        "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
-        "C:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libistdio.so"
+        "NDK_OUT\u003dC:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj",
+        "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
+        "C:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libistdio.so"
       ],
       "abi": "armeabi-v7a",
-      "output": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libistdio.so",
+      "output": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libistdio.so",
       "runtimeFiles": []
     },
     "pojavexec-debug-armeabi-v7a": {
@@ -56,18 +56,18 @@
       "buildCommandComponents": [
         "C:\\Users\\Anon\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\ndk-build.cmd",
         "NDK_PROJECT_PATH\u003dnull",
-        "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
-        "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Application.mk",
+        "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
+        "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Application.mk",
         "APP_ABI\u003darmeabi-v7a",
         "NDK_ALL_ABIS\u003darmeabi-v7a",
         "NDK_DEBUG\u003d1",
         "APP_PLATFORM\u003dandroid-21",
-        "NDK_OUT\u003dC:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj",
-        "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
-        "C:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libpojavexec.so"
+        "NDK_OUT\u003dC:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj",
+        "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
+        "C:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libpojavexec.so"
       ],
       "abi": "armeabi-v7a",
-      "output": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libpojavexec.so",
+      "output": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libpojavexec.so",
       "runtimeFiles": []
     },
     "awt_xawt-debug-armeabi-v7a": {
@@ -75,18 +75,18 @@
       "buildCommandComponents": [
         "C:\\Users\\Anon\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\ndk-build.cmd",
         "NDK_PROJECT_PATH\u003dnull",
-        "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
-        "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Application.mk",
+        "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
+        "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Application.mk",
         "APP_ABI\u003darmeabi-v7a",
         "NDK_ALL_ABIS\u003darmeabi-v7a",
         "NDK_DEBUG\u003d1",
         "APP_PLATFORM\u003dandroid-21",
-        "NDK_OUT\u003dC:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj",
-        "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
-        "C:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libawt_xawt.so"
+        "NDK_OUT\u003dC:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj",
+        "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
+        "C:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libawt_xawt.so"
       ],
       "abi": "armeabi-v7a",
-      "output": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libawt_xawt.so",
+      "output": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libawt_xawt.so",
       "runtimeFiles": []
     },
     "awt_headless-debug-armeabi-v7a": {
@@ -94,18 +94,18 @@
       "buildCommandComponents": [
         "C:\\Users\\Anon\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\ndk-build.cmd",
         "NDK_PROJECT_PATH\u003dnull",
-        "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
-        "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Application.mk",
+        "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
+        "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Application.mk",
         "APP_ABI\u003darmeabi-v7a",
         "NDK_ALL_ABIS\u003darmeabi-v7a",
         "NDK_DEBUG\u003d1",
         "APP_PLATFORM\u003dandroid-21",
-        "NDK_OUT\u003dC:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj",
-        "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
-        "C:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libawt_headless.so"
+        "NDK_OUT\u003dC:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj",
+        "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
+        "C:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libawt_headless.so"
       ],
       "abi": "armeabi-v7a",
-      "output": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libawt_headless.so",
+      "output": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libawt_headless.so",
       "runtimeFiles": []
     },
     "pojavexec_awt-debug-armeabi-v7a": {
@@ -113,18 +113,18 @@
       "buildCommandComponents": [
         "C:\\Users\\Anon\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\ndk-build.cmd",
         "NDK_PROJECT_PATH\u003dnull",
-        "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
-        "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Application.mk",
+        "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
+        "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Application.mk",
         "APP_ABI\u003darmeabi-v7a",
         "NDK_ALL_ABIS\u003darmeabi-v7a",
         "NDK_DEBUG\u003d1",
         "APP_PLATFORM\u003dandroid-21",
-        "NDK_OUT\u003dC:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj",
-        "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
-        "C:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libpojavexec_awt.so"
+        "NDK_OUT\u003dC:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj",
+        "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
+        "C:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libpojavexec_awt.so"
       ],
       "abi": "armeabi-v7a",
-      "output": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libpojavexec_awt.so",
+      "output": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libpojavexec_awt.so",
       "runtimeFiles": []
     },
     "xhook-debug-armeabi-v7a": {
@@ -132,18 +132,18 @@
       "buildCommandComponents": [
         "C:\\Users\\Anon\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\ndk-build.cmd",
         "NDK_PROJECT_PATH\u003dnull",
-        "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
-        "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Application.mk",
+        "APP_BUILD_SCRIPT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
+        "NDK_APPLICATION_MK\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Application.mk",
         "APP_ABI\u003darmeabi-v7a",
         "NDK_ALL_ABIS\u003darmeabi-v7a",
         "NDK_DEBUG\u003d1",
         "APP_PLATFORM\u003dandroid-21",
-        "NDK_OUT\u003dC:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj",
-        "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
-        "C:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libxhook.so"
+        "NDK_OUT\u003dC:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj",
+        "NDK_LIBS_OUT\u003dC:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
+        "C:/Users/Anon/Projects/2009scape-mobile/app_2009scape/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libxhook.so"
       ],
       "abi": "armeabi-v7a",
-      "output": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libxhook.so",
+      "output": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libxhook.so",
       "runtimeFiles": []
     }
   }

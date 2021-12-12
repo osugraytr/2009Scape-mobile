@@ -6,34 +6,31 @@
     "deprecated": false,
     "default": true
   },
-  "originalCxxBuildFolder": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\.cxx\\ndkBuild\\debug\\x86",
-  "cxxBuildFolder": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\.cxx\\ndkBuild\\debug\\x86",
+  "originalCxxBuildFolder": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\.cxx\\ndkBuild\\debug\\x86",
+  "cxxBuildFolder": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\.cxx\\ndkBuild\\debug\\x86",
   "abiPlatformVersion": 21,
   "variant": {
     "buildSystemArgumentList": [],
     "cFlagsList": [],
     "cppFlagsList": [],
     "variantName": "debug",
-    "objFolder": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local",
-    "soFolder": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
+    "objFolder": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\obj\\local",
+    "soFolder": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates\\ndkBuild\\debug\\lib",
     "isDebuggableEnabled": true,
     "validAbiList": [
-      "ARMEABI_V7A",
-      "ARM64_V8A",
-      "X86",
-      "X86_64"
+      "X86"
     ],
     "buildTargetSet": [],
     "implicitBuildTargetSet": [],
     "cmakeSettingsConfiguration": "android-gradle-plugin-predetermined-name",
     "module": {
-      "cxxFolder": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\.cxx",
+      "cxxFolder": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\.cxx",
       "splitsAbiFilterSet": [],
-      "intermediatesFolder": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build\\intermediates",
+      "intermediatesFolder": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build\\intermediates",
       "gradleModulePathName": ":app_2009scape",
-      "moduleRootFolder": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape",
-      "moduleBuildFile": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\build.gradle",
-      "makeFile": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
+      "moduleRootFolder": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape",
+      "moduleBuildFile": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\build.gradle",
+      "makeFile": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
       "buildSystem": "NDK_BUILD",
       "ndkFolder": "C:\\Users\\Anon\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529",
       "ndkVersion": "21.4.7075529",
@@ -112,22 +109,23 @@
         "SYSTEM": {}
       },
       "project": {
-        "rootBuildGradleFolder": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher",
-        "cxxFolder": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\.cxx",
-        "compilerSettingsCacheFolder": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\.cxx",
+        "rootBuildGradleFolder": "C:\\Users\\Anon\\Projects\\2009scape-mobile",
+        "cxxFolder": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\.cxx",
+        "compilerSettingsCacheFolder": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\.cxx",
         "sdkFolder": "C:\\Users\\Anon\\AppData\\Local\\Android\\Sdk",
         "isNativeCompilerSettingsCacheEnabled": false,
         "isBuildOnlyTargetAbiEnabled": true,
+        "ideBuildTargetAbi": "x86",
         "isCmakeBuildCohabitationEnabled": false,
         "isPrefabEnabled": false,
         "isV2NativeModelEnabled": true
       },
       "nativeBuildOutputLevel": "QUIET"
     },
-    "prefabDirectory": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\.cxx\\ndkBuild\\debug\\prefab"
+    "prefabDirectory": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\.cxx\\ndkBuild\\debug\\prefab"
   },
   "buildSettings": {
     "environmentVariables": []
   },
-  "prefabFolder": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\.cxx\\ndkBuild\\debug\\prefab\\x86"
+  "prefabFolder": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\.cxx\\ndkBuild\\debug\\prefab\\x86"
 }

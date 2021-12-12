@@ -1,8 +1,7 @@
 
 make: Nothing to be done for 'awt_headless'.
 make: Nothing to be done for 'awt_xawt'.
-[armeabi-v7a] Compile thumb  : istdio <= stdio_is.c
-[armeabi-v7a] SharedLibrary  : libistdio.so
+make: Nothing to be done for 'istdio'.
 make: Nothing to be done for 'pojavexec'.
 make: Nothing to be done for 'pojavexec_awt'.
 make: Nothing to be done for 'xhook'.

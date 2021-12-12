@@ -2,21 +2,21 @@
   {
     "level": "INFO",
     "message": "Start JSON generation. Platform version: 21 min SDK version: x86",
-    "file": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
+    "file": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
     "tag": "debug|x86",
     "diagnosticCode": "UNKNOWN"
   },
   {
     "level": "INFO",
-    "message": "JSON \u0027C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\.cxx\\ndkBuild\\debug\\x86\\android_gradle_build.json\u0027 was up-to-date",
-    "file": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
+    "message": "JSON \u0027C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\.cxx\\ndkBuild\\debug\\x86\\android_gradle_build.json\u0027 was up-to-date",
+    "file": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
     "tag": "debug|x86",
     "diagnosticCode": "UNKNOWN"
   },
   {
     "level": "INFO",
     "message": "JSON generation completed without problems",
-    "file": "C:\\Users\\Anon\\StudioProjects\\PojavLauncher\\app_2009scape\\src\\main\\jni\\Android.mk",
+    "file": "C:\\Users\\Anon\\Projects\\2009scape-mobile\\app_2009scape\\src\\main\\jni\\Android.mk",
     "tag": "debug|x86",
     "diagnosticCode": "UNKNOWN"
   }

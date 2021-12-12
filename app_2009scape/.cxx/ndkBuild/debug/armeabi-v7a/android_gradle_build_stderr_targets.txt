@@ -1,12 +1,2 @@
-process_begin: CreateProcess(NULL, (rm C:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/src/main/jni/../jniLibs/*/libawt_headless.so), ...) failed.
-make: C:\Users\Anon\StudioProjects\PojavLauncher\app_2009scape\src\main\jni\Android.mk:77: pipe: No error
-C:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/src/main/jni/stdio_is.c:39:1: warning: control reaches end of non-void function [-Wreturn-type]
-}
-^
-C:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/src/main/jni/stdio_is.c:86:50: warning: incompatible pointer types passing 'void (**)(int)' to parameter of type 'void **' [-Wincompatible-pointer-types]
-    xhook_register(".*\\.so$","exit",custom_exit,&old_exit);
-                                                 ^~~~~~~~~
-C:/Users/Anon/StudioProjects/PojavLauncher/app_2009scape/src/main/jni/xhook\xhook.h:34:43: note: passing argument to parameter 'old_func' here
-                   void *new_func, void **old_func) XHOOK_EXPORT;
-                                          ^
-2 warnings generated.
+process_begin: CreateProcess(NULL, (rm C:/Users/Anon/Projects/2009scape-mobile/app_2009scape/src/main/jni/../jniLibs/*/libawt_headless.so), ...) failed.
+make: C:\Users\Anon\Projects\2009scape-mobile\app_2009scape\src\main\jni\Android.mk:77: pipe: No error
