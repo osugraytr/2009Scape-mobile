@@ -29,7 +29,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     String specialChars = "/*!@#$%^&*()\"{}_[+=-_]\'|\\?/<>,.";
     private LoggerView loggerView;
     private boolean mouseState = false;
-    private int mode = 0;
 
     private LinearLayout touchPad;
     private ImageView mousePointer;
@@ -72,24 +71,11 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             float scaleFactor = detector.getScaleFactor();
-            switch(mode){
-                case 0: // Pinch to Zoom
-                    if (scaleFactor > 1) {
-                        //Send F4 To Zoom Out
-                        AWTInputBridge.sendKey((char)115,115);
-                    } else {
-                        //116
-                        AWTInputBridge.sendKey((char)116,116);
-                    }
-                    break;
-                case 1: // Right click
-                    AWTInputBridge.sendKey((char)122,122);
-                    AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
-                    break;
-
-
+            if (scaleFactor > 1) { //Send F4 To Zoom Out
+                AWTInputBridge.sendKey((char)115,115);
+            } else { //116 F5 To Zoom In
+                AWTInputBridge.sendKey((char) 116, 116);
             }
-
             return true;
         }
 
@@ -108,13 +94,11 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
         @Override
         public boolean onDown(MotionEvent event) {
-            //...
             return super.onDown(event);
         }
 
         @Override
         public boolean onSingleTapUp(MotionEvent event) {
-            //...
             return true;
         }
 
@@ -149,7 +133,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
             this.touchPad = findViewById(R.id.main_touchpad);
             touchPad.setFocusable(false);
-            touchPad.setVisibility(View.GONE);
+            touchPad.setVisibility(View.VISIBLE);
 
             this.mousePointer = findViewById(R.id.main_mouse_pointer);
             this.mousePointer.post(() -> {
@@ -162,17 +146,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                     private float prevX, prevY;
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        mode = 1;
-                       //longTapGestureDetector.onLongPress(event);
-                        // MotionEvent reports input details from the touch screen
-                        // and other input controls. In this case, you are only
-                        // interested in events where the touch position changed.
-                        // int index = event.getActionIndex();
-
-                        //System.out.println("sending pos: "+prevX+","+prevY);
-                        //sendScaledMousePosition(prevX,prevY);
-                        //AWTInputBridge.sendMousePress(AWTInputEvent.NOBUTTON);
-
                         int action = event.getActionMasked();
 
                         float x = event.getX();
@@ -192,6 +165,9 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                             clearRC();
                         } else {
                             switch (action) {
+                                case MotionEvent.ACTION_POINTER_DOWN: //Second finger rightclicking
+                                    AWTInputBridge.sendKey((char)122,122);
+                                    AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
                                 case MotionEvent.ACTION_UP: // 1
                                 case MotionEvent.ACTION_CANCEL: // 3
                                 case MotionEvent.ACTION_POINTER_UP: // 6
@@ -212,8 +188,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                             }
                         }
 
-                        scaleGestureDetector.onTouchEvent(event);
-
                         // debugText.setText(CallbackBridge.DEBUG_STRING.toString());
                         CallbackBridge.DEBUG_STRING.setLength(0);
 
@@ -226,15 +200,12 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             // this.textLogBehindGL = (TextView) findViewById(R.id.main_log_behind_GL);
             // this.textLogBehindGL.setTypeface(Typeface.MONOSPACE);
 
-
             final File modFile = (File) getIntent().getExtras().getSerializable("modFile");
             final String javaArgs = getIntent().getExtras().getString("javaArgs");
 
             mTextureView = findViewById(R.id.installmod_surfaceview);
             mTextureView.setOnTouchListener((v, event) -> {
-                mode = 0;
-                if(scaleGestureDetector.onTouchEvent(event)){
-                }
+                scaleGestureDetector.onTouchEvent(event);
                 float x = event.getX();
                 float y = event.getY();
                 if (gestureDetector.onTouchEvent(event)) {
@@ -242,7 +213,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                     AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
                     return true;
                 }
-
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_UP: // 1
                     case MotionEvent.ACTION_CANCEL: // 3
@@ -266,12 +236,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 try {
                     final int exit = doCustomInstall(modFile, javaArgs);
                     Logger.getInstance().appendToLog(getString(R.string.toast_optifine_success));
-                    if (exit != 0) return;
-                    runOnUiThread(() -> {
-                        Toast.makeText(JavaGUILauncherActivity.this, R.string.toast_optifine_success, Toast.LENGTH_SHORT).show();
-                        MainActivity.fullyExit();
-                    });
-
                 } catch (Throwable e) {
                     Logger.getInstance().appendToLog("Install failed:");
                     Logger.getInstance().appendToLog(Log.getStackTraceString(e));
@@ -282,18 +246,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             Tools.showError(this, th, true);
         }
         //scaleUp(mTextureView);
-    }
-
-    private void clearRC(){
-        rcState = false;
-        AWTInputBridge.sendKey((char)121,121);
-        findViewById(R.id.installmod_mouse_sec).setBackground(getResources().getDrawable( R.drawable.control_button ));
-    }
-
-    private void activateRC(){
-        rcState = true;
-        AWTInputBridge.sendKey((char)122,122);
-        findViewById(R.id.installmod_mouse_sec).setBackground(getResources().getDrawable( R.drawable.control_button_pressed ));
     }
 
     @Override
@@ -337,10 +289,11 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if(event.getAction() == KeyEvent.ACTION_DOWN){
-            //Log.i("key getKeycode", String.valueOf(event.getKeyCode()));
-            //Log.i("key unicode", String.valueOf((char)event.getUnicodeChar()));
-            //Log.i("key unicode int", String.valueOf(event.getUnicodeChar()));
-
+            /*
+            Log.i("key getKeycode", String.valueOf(event.getKeyCode()));
+            Log.i("key unicode", String.valueOf((char)event.getUnicodeChar()));
+            Log.i("key unicode int", String.valueOf(event.getUnicodeChar()));
+            */
             if(event.getKeyCode() == 67){
                 // Backspace
                 AWTInputBridge.sendKey((char)0x08,0x08);
@@ -409,7 +362,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                         c = '\\';
                         break;
                 }
-                System.out.println("I SEE A "+(char)event.getUnicodeChar());
+                //System.out.println("I SEE A "+(char)event.getUnicodeChar());
                 if(c != (char)event.getUnicodeChar()){
                     System.out.println("REPLACED with "+(char)c);
                     AWTInputBridge.sendKey((char)123,123);
@@ -434,6 +387,18 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             }
         }
         return true;
+    }
+
+    private void clearRC(){
+        rcState = false;
+        AWTInputBridge.sendKey((char)121,121);
+        findViewById(R.id.installmod_mouse_sec).setBackground(getResources().getDrawable( R.drawable.control_button ));
+    }
+
+    private void activateRC(){
+        rcState = true;
+        AWTInputBridge.sendKey((char)122,122);
+        findViewById(R.id.installmod_mouse_sec).setBackground(getResources().getDrawable( R.drawable.control_button_pressed ));
     }
 
     public void placeMouseAdd(float x, float y) {
@@ -469,9 +434,9 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
     public void toggleVirtualMouse(View v) {
         isVirtualMouseEnabled = !isVirtualMouseEnabled;
-        touchPad.setVisibility(isVirtualMouseEnabled ? View.VISIBLE : View.GONE);
+        touchPad.setVisibility(isVirtualMouseEnabled ? View.GONE : View.VISIBLE);
         Toast.makeText(this,
-                isVirtualMouseEnabled ? R.string.control_mouseon : R.string.control_mouseoff,
+                isVirtualMouseEnabled ? R.string.control_mouseoff : R.string.control_mouseon,
                 Toast.LENGTH_SHORT).show();
     }
     

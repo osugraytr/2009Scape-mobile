@@ -64,31 +64,12 @@
             android:name="net.kdt.pojavlaunch.FatalErrorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard|navigation"/>
         <activity
-            android:theme="@style/MenuDialog"
-            android:screenOrientation="sensorLandscape"
-            android:name="net.kdt.pojavlaunch.ExitActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|keyboard|navigation"/>
-        
-        <activity
             android:screenOrientation="sensorLandscape"
             android:name="net.kdt.pojavlaunch.JavaGUILauncherActivity"
             android:windowSoftInputMode="adjustPan"
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard|navigation"/>
-		
-        <activity
-            android:screenOrientation="sensorLandscape"
-            android:name="net.kdt.pojavlaunch.CustomControlsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|keyboard|navigation"/>
-        <activity
-            android:screenOrientation="sensorLandscape"
-            android:name="net.kdt.pojavlaunch.authenticator.microsoft.ui.MicrosoftLoginGUIActivity"/>
-        <activity
-            android:launchMode="standard"
-            android:multiprocess="true"
-            android:screenOrientation="sensorLandscape"
-            android:name="net.kdt.pojavlaunch.MainActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"/>
+
+
         <provider
             android:name="net.kdt.pojavlaunch.scoped.GameFolderProvider"
             android:authorities="@string/storageProviderAuthorities"

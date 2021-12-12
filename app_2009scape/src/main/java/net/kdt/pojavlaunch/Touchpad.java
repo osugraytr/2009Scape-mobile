@@ -1,6 +1,5 @@
 package net.kdt.pojavlaunch;
 
-import static net.kdt.pojavlaunch.MinecraftGLView.FINGER_SCROLL_THRESHOLD;
 import static net.kdt.pojavlaunch.Tools.currentDisplayMetrics;
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.DEFAULT_PREF;
 
@@ -26,6 +25,7 @@ import org.lwjgl.glfw.CallbackBridge;
  * Class dealing with the virtual mouse
  */
 public class Touchpad extends FrameLayout {
+    private static final int FINGER_SCROLL_THRESHOLD = 10;
     /* Whether the Touchpad should be displayed */
     private boolean displayState;
 

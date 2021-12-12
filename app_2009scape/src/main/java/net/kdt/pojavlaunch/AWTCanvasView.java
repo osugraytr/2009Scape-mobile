@@ -1,10 +1,15 @@
 package net.kdt.pojavlaunch;
 
+import android.annotation.SuppressLint;
 import android.content.*;
 import android.graphics.*;
+import android.os.Build;
 import android.text.*;
 import android.util.*;
 import android.view.*;
+
+import androidx.annotation.RequiresApi;
+
 import java.util.*;
 import net.kdt.pojavlaunch.utils.*;
 import org.lwjgl.glfw.*;
@@ -55,7 +60,7 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
         //Could be optimized
         if(forcedScale < 1) { //Auto scale
             int minDimension = Math.min(CallbackBridge.physicalHeight, CallbackBridge.physicalWidth);
-            mScaleFactor = Math.max(((3 * minDimension) / 1080) - 1, 1);
+            mScaleFactor = 2;
         }else{
             mScaleFactor = forcedScale;
         }
@@ -103,22 +108,7 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
     }
 
     @Override
-    protected void onSizeChanged(int xNew, int yNew, int xOld, int yOld)
-    {
-        System.out.println("WOW THE SIZE CHANGED");
-        System.out.println(xNew+ " "+yNew);
-        if(!original){
-            offsetX =  (yNew/8)*-1;
-            offsetY =  xNew/3;
-            mWidth = offsetX;
-            mHeight = offsetY;
-            System.out.println("Placed at "+offsetX+ " "+offsetY);
-            original = true;
-        } else{
-            offsetX = 0;
-            offsetY = 0;
-            original = false;
-        }
+    protected void onSizeChanged(int xNew, int yNew, int xOld, int yOld) {
         super.onSizeChanged(xNew, yNew, xOld, yOld);
     }
 
@@ -154,8 +144,6 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
                         canvas.save();
                         canvas.scale(mScaleFactor, mScaleFactor);
                         canvas.translate(-mScales[0],-mScales[1]);
-
-
                         canvas.drawBitmap(rgbArray, 0, CallbackBridge.physicalWidth, offsetX, offsetY, CallbackBridge.physicalWidth, CallbackBridge.physicalHeight, true, null);
                         canvas.restore();
 
@@ -164,7 +152,6 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
                     // System.gc();
                 }
                 canvas.drawText("FPS: " + (Math.round(fps() * 10) / 10) + ", attached=" + attached + ", drawing=" + mDrawing, 50, 50, fpsPaint);
-
                 mSurface.unlockCanvasAndPost(canvas);
             }
         } catch (Throwable th) {

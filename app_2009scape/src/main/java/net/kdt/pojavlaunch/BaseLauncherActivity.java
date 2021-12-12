@@ -15,9 +15,6 @@ import java.io.*;
 import net.kdt.pojavlaunch.multirt.MultiRTConfigDialog;
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;
 import net.kdt.pojavlaunch.prefs.*;
-import net.kdt.pojavlaunch.tasks.*;
-
-import net.kdt.pojavlaunch.value.*;
 
 import org.apache.commons.io.IOUtils;
 
@@ -27,10 +24,7 @@ public abstract class BaseLauncherActivity extends BaseActivity {
 	public Spinner mVersionSelector;
 	public MultiRTConfigDialog mRuntimeConfigDialog;
 	public TextView mLaunchTextStatus;
-    
-    public JMinecraftVersionList mVersionList;
-	public MinecraftDownloaderTask mTask;
-	public MinecraftAccount mProfile;
+
 	public String[] mAvailableVersions;
     
 	public boolean mIsAssetsProcessing = false;
@@ -39,13 +33,6 @@ public abstract class BaseLauncherActivity extends BaseActivity {
     public abstract void statusIsLaunching(boolean isLaunching);
 
 
-    /**
-     * Used by the custom control button from the layout_main_v4
-     * @param view The view triggering the function
-     */
-    public void launchCustomControlsActivity(View view){
-        startActivity(new Intent(BaseLauncherActivity.this, CustomControlsActivity.class));
-    }
 
     /**
      * Used by the install button from the layout_main_v4
@@ -61,8 +48,8 @@ public abstract class BaseLauncherActivity extends BaseActivity {
             statusIsLaunching(false);
         } else if (canBack) {
             v.setEnabled(false);
-            mTask = new MinecraftDownloaderTask(this);
-            mTask.execute(mProfile.selectedVersion);
+            //mTask = new MinecraftDownloaderTask(this);
+            //mTask.execute(mProfile.selectedVersion);
 
         }
     }
@@ -101,12 +88,10 @@ public abstract class BaseLauncherActivity extends BaseActivity {
             listRefreshListener = (sharedPreferences, key) -> {
                 if(key.startsWith("vertype_")) {
                     System.out.println("Verlist update needed!");
-                    new RefreshVersionListTask(thiz).execute();
                 }
             };
         }
         LauncherPreferences.DEFAULT_PREF.registerOnSharedPreferenceChangeListener(listRefreshListener);
-        new RefreshVersionListTask(this).execute();
         System.out.println("call to onResumeFragments");
         mRuntimeConfigDialog = new MultiRTConfigDialog();
         mRuntimeConfigDialog.prepare(this);

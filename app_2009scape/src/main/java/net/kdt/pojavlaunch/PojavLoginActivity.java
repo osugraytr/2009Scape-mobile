@@ -5,14 +5,11 @@ import static net.kdt.pojavlaunch.Tools.getFileName;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -35,17 +30,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import net.kdt.pojavlaunch.authenticator.microsoft.MicrosoftAuthTask;
-import net.kdt.pojavlaunch.authenticator.microsoft.ui.MicrosoftLoginGUIActivity;
-import net.kdt.pojavlaunch.authenticator.mojang.InvalidateTokenTask;
-import net.kdt.pojavlaunch.authenticator.mojang.LoginListener;
-import net.kdt.pojavlaunch.authenticator.mojang.LoginTask;
-import net.kdt.pojavlaunch.authenticator.mojang.RefreshListener;
-import net.kdt.pojavlaunch.customcontrols.CustomControls;
 import net.kdt.pojavlaunch.multirt.MultiRTConfigDialog;
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
-import net.kdt.pojavlaunch.value.MinecraftAccount;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -68,7 +55,6 @@ public class PojavLoginActivity extends BaseActivity
     private CheckBox sRemember, sOffline;
     private TextView startupTextView;
     private SharedPreferences firstLaunchPrefs;
-    private MinecraftAccount mProfile = null;
     
     private boolean isSkipInit = false;
     private boolean isStarting = false;
@@ -202,9 +188,7 @@ public class PojavLoginActivity extends BaseActivity
         super.onResume();
         
         Tools.updateWindowSize(this);
-        
-        // Clear current profile
-        PojavProfile.setCurrentProfile(this, null);
+
     }
 
    
@@ -259,22 +243,14 @@ public class PojavLoginActivity extends BaseActivity
     }
     private void initMain() throws Throwable {
         mkdirs(Tools.DIR_ACCOUNT_NEW);
-        PojavMigrator.migrateAccountData(this);
         
         mkdirs(Tools.DIR_GAME_HOME);
         mkdirs(Tools.DIR_GAME_HOME + "/lwjgl3");
         mkdirs(Tools.DIR_GAME_HOME + "/config");
-        if (!PojavMigrator.migrateGameDir()) {
-            mkdirs(Tools.DIR_GAME_NEW);
-            mkdirs(Tools.DIR_GAME_NEW + "/mods");
-            mkdirs(Tools.DIR_HOME_VERSION);
-            mkdirs(Tools.DIR_HOME_LIBRARY);
-        }
 
         mkdirs(Tools.CTRLMAP_PATH);
 
         try {
-            new CustomControls(this).save(Tools.CTRLDEF_FILE);
 
             Tools.copyAssetFile(this, "components/security/pro-grade.jar", Tools.DIR_DATA, true);
             Tools.copyAssetFile(this, "components/security/java_sandbox.policy", Tools.DIR_DATA, true);
@@ -323,9 +299,6 @@ public class PojavLoginActivity extends BaseActivity
                     });
                     t.start();
                 }
-            }else if(requestCode == MicrosoftLoginGUIActivity.AUTHENTICATE_MICROSOFT_REQUEST) {
-                //Log.i("MicroLoginWrap","Got microsoft login result:" + data);
-                performMicroLogin(data);
             }
         }
     }
@@ -362,12 +335,7 @@ public class PojavLoginActivity extends BaseActivity
         else return file.mkdirs();
     }
 
-    
-    public void loginMicrosoft(View view) {
-        Intent i = new Intent(this,MicrosoftLoginGUIActivity.class);
-        startActivityForResult(i,MicrosoftLoginGUIActivity.AUTHENTICATE_MICROSOFT_REQUEST);
-    }
-    
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -383,21 +351,6 @@ public class PojavLoginActivity extends BaseActivity
                 if (!error_description.startsWith("The user has denied access to the scope requested by the client application")) {
                     Toast.makeText(this, "Error: " + error + ": " + error_description, Toast.LENGTH_LONG).show();
                 }
-            } else {
-                String code = data.getQueryParameter("code");
-                new MicrosoftAuthTask(this, new RefreshListener(){
-                    @Override
-                    public void onFailed(Throwable e) {
-                        Tools.showError(PojavLoginActivity.this, e);
-                    }
-
-                    @Override
-                    public void onSuccess(MinecraftAccount b) {
-                        mProfile = b;
-                        playProfile(false);
-                    }
-                }).execute("false", code);
-                // Toast.makeText(this, "Logged in to Microsoft account, but NYI", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -412,187 +365,19 @@ public class PojavLoginActivity extends BaseActivity
             return listView.getChildAt(childIndex);
         }
     }
-    
-    public void loginSavedAcc(View view) {
-        String[] accountArr = new File(Tools.DIR_ACCOUNT_NEW).list();
-        if(accountArr.length == 0){
-           showNoAccountDialog();
-           return;
-        }
-
-        final Dialog accountDialog = new Dialog(PojavLoginActivity.this);
-
-        accountDialog.setContentView(R.layout.simple_account_list_holder);
-
-        LinearLayout accountListLayout = accountDialog.findViewById(R.id.accountListLayout);
-        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-
-        for (int accountIndex = 0; accountIndex < accountArr.length; accountIndex++) {
-            String s = accountArr[accountIndex];
-            View child = inflater.inflate(R.layout.simple_account_list_item, accountListLayout,false);
-            TextView accountName = child.findViewById(R.id.accountitem_text_name);
-            ImageButton removeButton = child.findViewById(R.id.accountitem_button_remove);
-            ImageView imageView = child.findViewById(R.id.account_head);
-
-            String accNameStr = s.substring(0, s.length() - 5);
-            imageView.setImageBitmap(MinecraftAccount.load(accNameStr).getSkinFace());
-
-            accountName.setText(accNameStr);
-
-            accountListLayout.addView(child);
-
-            accountName.setOnClickListener(new View.OnClickListener() {
-                final String selectedAccName = accountName.getText().toString();
-                @Override
-                public void onClick(View v) {
-                    try {
-                        RefreshListener authListener = new RefreshListener(){
-                            @Override
-                            public void onFailed(Throwable e) {
-                                Tools.showError(PojavLoginActivity.this, e);
-                            }
-
-                            @Override
-                            public void onSuccess(MinecraftAccount out) {
-                                accountDialog.dismiss();
-                                mProfile = out;
-                                playProfile(true);
-                            }
-                        };
-
-                        MinecraftAccount acc = MinecraftAccount.load(selectedAccName);
-                        if (acc.isMicrosoft){
-                            new MicrosoftAuthTask(PojavLoginActivity.this, authListener)
-                                    .execute("true", acc.msaRefreshToken);
-                        } else if (acc.accessToken.length() >= 5) {
-                            PojavProfile.updateTokens(PojavLoginActivity.this, selectedAccName, authListener);
-                        } else {
-                            accountDialog.dismiss();
-                            PojavProfile.launch(PojavLoginActivity.this, selectedAccName);
-                        }
-                    } catch (Exception e) {
-                        Tools.showError(PojavLoginActivity.this, e);
-                    }
-                }
-            });
-
-            final int accountIndex_final = accountIndex;
-            removeButton.setOnClickListener(new View.OnClickListener() {
-                final String selectedAccName = accountName.getText().toString();
-                @Override
-                public void onClick(View v) {
-                    AlertDialog.Builder builder2 = new AlertDialog.Builder(PojavLoginActivity.this);
-                    builder2.setTitle(selectedAccName);
-                    builder2.setMessage(R.string.warning_remove_account);
-                    builder2.setPositiveButton(android.R.string.ok, (p1, p2) -> {
-                        new InvalidateTokenTask(PojavLoginActivity.this).execute(selectedAccName);
-                        accountListLayout.removeViewsInLayout(accountIndex_final, 1);
-
-                        if (accountListLayout.getChildCount() == 0) {
-                            accountDialog.dismiss(); //No need to keep it, since there is no account
-                            return;
-                        }
-                        //Refreshes the layout with the same settings so it take the missing child into account.
-                        accountListLayout.setLayoutParams(accountListLayout.getLayoutParams());
-
-                    });
-                    builder2.setNegativeButton(android.R.string.cancel, null);
-                    builder2.show();
-                }
-            });
-
-        }
-        accountDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        accountDialog.show();
-    }
-    
-    private MinecraftAccount loginOffline() {
-        new File(Tools.DIR_ACCOUNT_OLD).mkdir();
-        
-        String text = edit2.getText().toString();
-        if (text.isEmpty()) {
-            edit2.setError(getString(R.string.global_error_field_empty));
-        } else if (text.length() < 3 || text.length() > 16 || !text.matches("\\w+")) {
-            edit2.setError(getString(R.string.login_error_invalid_username));
-        } else if (new File(Tools.DIR_ACCOUNT_NEW + "/" + text + ".json").exists()) {
-            edit2.setError(getString(R.string.login_error_exist_username));
-        } else if (!edit3.getText().toString().isEmpty()) {
-            edit3.setError(getString(R.string.login_error_offline_password));
-        } else {
-            MinecraftAccount builder = new MinecraftAccount();
-            builder.isMicrosoft = false;
-            builder.username = text;
-            
-            return builder;
-        }
-        return null;
-    }
-    
-
-    public void loginMC(final View v)
-    {
-        
-        if (sOffline.isChecked()) {
-            mProfile = loginOffline();
-            playProfile(false);
-        } else {
-            ProgressBar prb = findViewById(R.id.launcherAccProgress);
-            new LoginTask().setLoginListener(new LoginListener(){
 
 
-                    @Override
-                    public void onBeforeLogin() {
-                        v.setEnabled(false);
-                        prb.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onLoginDone(String[] result) {
-                        if(result[0].equals("ERROR")){
-                            Tools.dialogOnUiThread(PojavLoginActivity.this,
-                                getResources().getString(R.string.global_error), strArrToString(result));
-                        } else{
-                            MinecraftAccount builder = new MinecraftAccount();
-                            builder.accessToken = result[1];
-                            builder.clientToken = result[2];
-                            builder.profileId = result[3];
-                            builder.username = result[4];
-                            builder.updateSkinFace();
-                            mProfile = builder;
-                        }
-                        runOnUiThread(() -> {
-                            v.setEnabled(true);
-                            prb.setVisibility(View.GONE);
-                            playProfile(false);
-                        });
-                    }
-                }).execute(edit2.getText().toString(), edit3.getText().toString());
-        }
-    }
-    
     private void playProfile(boolean notOnLogin) {
-        if (mProfile != null) {
-            try {
-                String profileName = null;
-                if (sRemember.isChecked() || notOnLogin) {
-                    profileName = mProfile.save();
-                }
-                
-                PojavProfile.launch(PojavLoginActivity.this, profileName == null ? mProfile : profileName);
-            } catch (IOException e) {
-                Tools.showError(this, e);
-            }
-        }
     }
-    
+
     public static String strArrToString(String[] strArr)
     {
         String[] strArrEdit = strArr.clone();
         strArrEdit[0] = "";
-        
+
         String str = Arrays.toString(strArrEdit);
         str = str.substring(1, str.length() - 1).replace(",", "\n");
-        
+
         return str;
     }
     //We are calling this method to check the permission status

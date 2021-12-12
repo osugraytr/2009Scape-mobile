@@ -21,18 +21,12 @@ import com.kdt.LoggerView;
 
 import java.io.*;
 import java.util.*;
-import net.kdt.pojavlaunch.customcontrols.*;
-
-import net.kdt.pojavlaunch.multirt.MultiRTUtils;
 
 import net.kdt.pojavlaunch.prefs.*;
-import net.kdt.pojavlaunch.utils.*;
-import net.kdt.pojavlaunch.value.*;
 import org.lwjgl.glfw.*;
 
 public class BaseMainActivity extends BaseActivity {
     public static volatile ClipboardManager GLOBAL_CLIPBOARD;
-    public static TouchCharInput touchCharInput;
 
     volatile public static boolean isInputStackCall;
 
@@ -40,11 +34,7 @@ public class BaseMainActivity extends BaseActivity {
 
     private boolean mIsResuming = false;
 
-    private MinecraftGLView minecraftGLView;
-    private static Touchpad touchpad;
-    private LoggerView loggerView;
-
-    private MinecraftAccount mProfile;
+    private static Touchpad touchpad;    private LoggerView loggerView;
     
     private DrawerLayout drawerLayout;
     private NavigationView navDrawer;
@@ -52,9 +42,6 @@ public class BaseMainActivity extends BaseActivity {
     private NavigationView.OnNavigationItemSelectedListener gameActionListener;
     public NavigationView.OnNavigationItemSelectedListener ingameControlsEditorListener;
 
-    protected volatile JMinecraftVersionList.Version mVersionInfo;
-
-    private PerVersionConfig.VersionConfig config;
 
     protected void initLayout(int resId) {
         setContentView(resId);
@@ -63,30 +50,9 @@ public class BaseMainActivity extends BaseActivity {
             Logger.getInstance().reset();
             // FIXME: is it safe fot multi thread?
             GLOBAL_CLIPBOARD = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            touchCharInput = findViewById(R.id.mainTouchCharInput);
             loggerView = findViewById(R.id.mainLoggerView);
-            
-            mProfile = PojavProfile.getCurrentProfileContent(this);
-            mVersionInfo = Tools.getVersionInfo(null,mProfile.selectedVersion);
-            
-            setTitle("Minecraft " + mProfile.selectedVersion);
-            PerVersionConfig.update();
-            config = PerVersionConfig.configMap.get(mProfile.selectedVersion);
-            String runtime = LauncherPreferences.PREF_DEFAULT_RUNTIME;
-            if(config != null) {
-                if(config.selectedRuntime != null) {
-                    if(MultiRTUtils.forceReread(config.selectedRuntime).versionString != null) {
-                        runtime = config.selectedRuntime;
-                    }
-                }
-                if(config.renderer != null) {
-                    Tools.LOCAL_RENDERER = config.renderer;
-                }
-            }
-            MultiRTUtils.setRuntimeNamed(this,runtime);
-            // Minecraft 1.13+
-            isInputStackCall = mVersionInfo.arguments != null;
-            
+
+
             Tools.getDisplayMetrics(this);
             windowWidth = Tools.getDisplayFriendlyRes(currentDisplayMetrics.widthPixels, scaleFactor);
             windowHeight = Tools.getDisplayFriendlyRes(currentDisplayMetrics.heightPixels, scaleFactor);
@@ -99,17 +65,22 @@ public class BaseMainActivity extends BaseActivity {
             navDrawer = findViewById(R.id.main_navigation_view);
             gameActionListener = menuItem -> {
                 switch (menuItem.getItemId()) {
-                    case R.id.nav_forceclose: dialogForceClose(BaseMainActivity.this);
+                    case R.id.nav_forceclose:
+                        //dialogForceClose(BaseMainActivity.this);
                         break;
-                    case R.id.nav_viewlog: openLogOutput();
+                    case R.id.nav_viewlog:
+                        //openLogOutput();
                         break;
-                    case R.id.nav_debug: minecraftGLView.togglepointerDebugging();
+                    //case R.id.nav_debug: minecraftGLView.togglepointerDebugging();
+                    //   break;
+                    case R.id.nav_customkey:
+                        //dialogSendCustomKey();
                         break;
-                    case R.id.nav_customkey: dialogSendCustomKey();
+                    case R.id.nav_mousespd:
+                        //adjustMouseSpeedLive();
                         break;
-                    case R.id.nav_mousespd: adjustMouseSpeedLive();
-                        break;
-                    case R.id.nav_customctrl: openCustomControls();
+                    case R.id.nav_customctrl:
+                        //openCustomControls();
                         break;
                 }
 
@@ -120,22 +91,20 @@ public class BaseMainActivity extends BaseActivity {
 
             touchpad = findViewById(R.id.main_touchpad);
 
+            //this.minecraftGLView = findViewById(R.id.main_game_render_view);
+            //this.drawerLayout.closeDrawers();
 
-            this.minecraftGLView = findViewById(R.id.main_game_render_view);
-            this.drawerLayout.closeDrawers();
-
-            minecraftGLView.setSurfaceReadyListener(() -> {
+            //minecraftGLView.setSurfaceReadyListener(() -> {
                 try {
-                    runCraft();
+                    //runCraft();
                 }catch (Throwable e){
                     Tools.showError(getApplicationContext(), e, true);
                 }
-            });
 
-            minecraftGLView.start();
+            //minecraftGLView.start();
 
-        } catch (Throwable e) {
-            Tools.showError(this, e, true);
+        } catch(Exception e){
+
         }
     }
 
@@ -163,34 +132,6 @@ public class BaseMainActivity extends BaseActivity {
 
     public static boolean isAndroid8OrHigher() {
         return Build.VERSION.SDK_INT >= 26; 
-    }
-
-    private void runCraft() throws Throwable {
-        if(Tools.LOCAL_RENDERER == null) {
-            Tools.LOCAL_RENDERER = LauncherPreferences.PREF_RENDERER;
-        }
-        Logger.getInstance().appendToLog("--------- beggining with launcher debug");
-        Logger.getInstance().appendToLog("Info: Launcher version: " + BuildConfig.VERSION_NAME);
-        if (Tools.LOCAL_RENDERER.equals("vulkan_zink")) {
-            checkVulkanZinkIsSupported();
-        }
-        checkLWJGL3Installed();
-        
-        JREUtils.jreReleaseList = JREUtils.readJREReleaseProperties();
-        JREUtils.checkJavaArchitecture(this, JREUtils.jreReleaseList.get("OS_ARCH"));
-        checkJavaArgsIsLaunchable(JREUtils.jreReleaseList.get("JAVA_VERSION"));
-        // appendlnToLog("Info: Custom Java arguments: \"" + LauncherPreferences.PREF_CUSTOM_JAVA_ARGS + "\"");
-
-        Logger.getInstance().appendToLog("Info: Selected Minecraft version: " + mVersionInfo.id +
-            ((mVersionInfo.inheritsFrom == null || mVersionInfo.inheritsFrom.equals(mVersionInfo.id)) ?
-            "" : " (" + mVersionInfo.inheritsFrom + ")"));
-
-        JREUtils.redirectAndPrintJRELog(this);
-        Tools.launchMinecraft(this, mProfile, mProfile.selectedVersion);
-    }
-    
-    private void checkJavaArgsIsLaunchable(String jreVersion) throws Throwable {
-        Logger.getInstance().appendToLog("Info: Custom Java arguments: \"" + LauncherPreferences.PREF_CUSTOM_JAVA_ARGS + "\"");
     }
 
     private void checkLWJGL3Installed() {
@@ -233,42 +174,8 @@ public class BaseMainActivity extends BaseActivity {
         return s.toString();
     }
 
-    private void dialogSendCustomKey() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle(R.string.control_customkey);
-        dialog.setItems(EfficientAndroidLWJGLKeycode.generateKeyName(), (dInterface, position) -> EfficientAndroidLWJGLKeycode.execKeyIndex(position));
-        dialog.show();
-    }
-
     boolean isInEditor;
-    private void openCustomControls() {
-        if(ingameControlsEditorListener == null) return;
 
-        ((MainActivity)this).mControlLayout.setModifiable(true);
-        navDrawer.getMenu().clear();
-        navDrawer.inflateMenu(R.menu.menu_customctrl);
-        navDrawer.setNavigationItemSelectedListener(ingameControlsEditorListener);
-        isInEditor = true;
-    }
-
-    public void leaveCustomControls() {
-        if(this instanceof MainActivity) {
-            try {
-                MainActivity.mControlLayout.hideAllHandleViews();
-                MainActivity.mControlLayout.loadLayout((CustomControls)null);
-                MainActivity.mControlLayout.setModifiable(false);
-                System.gc();
-                MainActivity.mControlLayout.loadLayout(LauncherPreferences.DEFAULT_PREF.getString("defaultCtrl",Tools.CTRLDEF_FILE));
-            } catch (IOException e) {
-                Tools.showError(this,e);
-            }
-            //((MainActivity) this).mControlLayout.loadLayout((CustomControls)null);
-        }
-        navDrawer.getMenu().clear();
-        navDrawer.inflateMenu(R.menu.menu_runopt);
-        navDrawer.setNavigationItemSelectedListener(gameActionListener);
-        isInEditor = false;
-    }
     private void openLogOutput() {
         loggerView.setVisibility(View.VISIBLE);
         mIsResuming = false;
@@ -302,20 +209,6 @@ public class BaseMainActivity extends BaseActivity {
                     Log.w(Tools.APP_NAME, "Could not enable System.exit() method!", th);
                 }
             }).show();
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && !touchCharInput.isEnabled()) {
-            if(event.getAction() != KeyEvent.ACTION_UP) return true; // We eat it anyway
-            sendKeyPress(LWJGLGLFWKeycode.GLFW_KEY_ESCAPE);
-            return true;
-        }
-        return super.dispatchKeyEvent(event);
-    }
-
-    public static void switchKeyboardState() {
-        if(touchCharInput != null) touchCharInput.switchKeyboardState();
     }
 
 
