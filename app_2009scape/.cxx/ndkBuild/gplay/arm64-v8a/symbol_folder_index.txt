@@ -1,1 +1,0 @@
-C:\Users\Anon\StudioProjects\PojavLauncher\app_2009scape\build\intermediates\ndkBuild\gplay\obj\local\arm64-v8a

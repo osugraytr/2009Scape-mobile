@@ -1,2 +1,0 @@
-C:\Users\Anon\Projects\2009scape-mobile\app_2009scape\src\main\jni\Android.mk
-C:\Users\Anon\Projects\2009scape-mobile\app_2009scape\src\main\jni\Application.mk
