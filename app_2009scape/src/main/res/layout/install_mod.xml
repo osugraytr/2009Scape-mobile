@@ -110,7 +110,8 @@
 			android:minWidth="70dip"
 			android:minHeight="40dip"
 			android:orientation="horizontal"
-			android:paddingLeft="20dip">
+			android:paddingLeft="20dip"
+			android:layout_marginBottom="50px">
 
 			<ImageView
 				android:layout_width="wrap_content"
@@ -127,6 +128,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentBottom="true"
+			android:layout_marginBottom="50px"
 			android:layout_toRightOf="@id/keyboard"
 			android:background="@drawable/control_button"
 			android:gravity="center"

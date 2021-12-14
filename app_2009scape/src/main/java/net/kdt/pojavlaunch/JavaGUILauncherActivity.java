@@ -34,7 +34,10 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     private GestureDetector gestureDetector;
     private long lastPress = 0;
     ScaleGestureDetector scaleGestureDetector;
-    SimpleGestureListener longTapGestureDetector;
+    GestureDetector longTapGestureDetector;
+    private long touchStart = 0;
+    boolean longPressTriggered = false;
+    boolean longPressShouldClick = false;
 
     private boolean rcState = false;
 
@@ -70,25 +73,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
         }
     }
-
-    class SimpleGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onDown(MotionEvent event) {
-            return super.onDown(event);
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent event) {
-            return true;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent event) {
-            System.out.println("We got a long tap!");
-            super.onLongPress(event);
-        }
-    }
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,12 +80,10 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         setContentView(R.layout.install_mod);
         Tools.updateWindowSize(this);
 
-        scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
-        longTapGestureDetector = new SimpleGestureListener();
-
         try {
             MultiRTUtils.setRuntimeNamed(this,LauncherPreferences.PREF_DEFAULT_RUNTIME);
             gestureDetector = new GestureDetector(this, new SingleTapConfirm());
+            scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
             findViewById(R.id.keyboard).setOnTouchListener(this);
             findViewById(R.id.camera).setOnTouchListener(this);
@@ -127,6 +109,12 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                     public boolean onTouch(View v, MotionEvent event) {
                         int action = event.getActionMasked();
 
+                        if(action == 0){
+                            // Reset checks because this is a new tap
+                            longPressTriggered = false;
+                            touchStart = System.currentTimeMillis();
+                        }
+
                         float x = event.getX();
                         float y = event.getY();
                         if(event.getHistorySize() > 0) {
@@ -148,6 +136,12 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                                     AWTInputBridge.sendKey((char)122,122);
                                     AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
                                 case MotionEvent.ACTION_UP: // 1
+                                    if(longPressShouldClick){
+                                        longPressShouldClick = false;
+                                        AWTInputBridge.sendKey((char)117,117);
+                                        AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
+                                    }
+                                    break;
                                 case MotionEvent.ACTION_CANCEL: // 3
                                 case MotionEvent.ACTION_POINTER_UP: // 6
                                     break;
@@ -155,10 +149,17 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                                     mouseX = Math.max(0, Math.min(CallbackBridge.physicalWidth, mouseX + x - prevX));
                                     mouseY = Math.max(0, Math.min(CallbackBridge.physicalHeight, mouseY + y - prevY));
                                     placeMouseAt(mouseX, mouseY);
-
                                     sendScaledMousePosition(mouseX,mouseY);
                                     break;
                             }
+                        }
+                        if(System.currentTimeMillis() - touchStart > 1000 && !longPressTriggered){
+                            longPressTriggered = true;
+                            longPressShouldClick = true;
+                            AWTInputBridge.sendKey((char)118,118);
+                            System.out.println("START: "+touchStart+"NOW: "+System.currentTimeMillis());
+                            System.out.println("LONG PRESS!");
+                            //AWTInputBridge.sendMousePress(AWTInputEvent.MOUSE_DRAGGED);
                         }
 
                         // debugText.setText(CallbackBridge.DEBUG_STRING.toString());
