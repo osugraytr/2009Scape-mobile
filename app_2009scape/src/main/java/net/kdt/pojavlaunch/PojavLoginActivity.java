@@ -71,6 +71,7 @@ public class PojavLoginActivity extends BaseActivity
         Tools.updateWindowSize(this);
         firstLaunchPrefs = getSharedPreferences("pojav_extract", MODE_PRIVATE);
         new Thread(new InitRunnable()).start();
+        System.out.println("I got to loginactivity again");
     }
 
     @Override
@@ -148,47 +149,39 @@ public class PojavLoginActivity extends BaseActivity
     }
     private void uiInit() {
         setContentView(R.layout.launcher_main_v4);
-        if (true) {
-            final ProgressDialog barrier = new ProgressDialog(this);
-            barrier.setMessage(getString(R.string.global_waiting));
-            barrier.setProgressStyle(barrier.STYLE_SPINNER);
-            barrier.setCancelable(false);
-            barrier.show();
+        final ProgressDialog barrier = new ProgressDialog(this);
+        barrier.setMessage(getString(R.string.global_waiting));
+        barrier.setProgressStyle(barrier.STYLE_SPINNER);
+        barrier.setCancelable(false);
+        barrier.show();
 
-            //final Uri uri = data.getData();
-            Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.beta);
-            String path = uri.getPath();
-            //File modFile = new File(new URI(path));
+        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.beta);
 
-
-            barrier.setMessage(PojavLoginActivity.this.getString(R.string.multirt_progress_caching));
-            Thread t = new Thread(()->{
-                try {
-                    final String name = getFileName(this, uri);
-                    final File modInstallerFile = new File(getCacheDir(), name);
-                    FileOutputStream fos = new FileOutputStream(modInstallerFile);
-                    IOUtils.copy(getContentResolver().openInputStream(uri), fos);
-                    fos.close();
-                    PojavLoginActivity.this.runOnUiThread(() -> {
-                        barrier.dismiss();
-                        Intent intent = new Intent(PojavLoginActivity.this, JavaGUILauncherActivity.class);
-                        intent.putExtra("modFile", modInstallerFile);
-                        startActivity(intent);
-                    });
-                }catch(IOException e) {
-                    //Tools.showError(PojavLoginActivity.this,e);
-                }
-            });
-            t.start();
-        }
+        barrier.setMessage(PojavLoginActivity.this.getString(R.string.multirt_progress_caching));
+        Thread t = new Thread(()->{
+            try {
+                final String name = getFileName(this, uri);
+                final File modInstallerFile = new File(getCacheDir(), name);
+                FileOutputStream fos = new FileOutputStream(modInstallerFile);
+                IOUtils.copy(getContentResolver().openInputStream(uri), fos);
+                fos.close();
+                PojavLoginActivity.this.runOnUiThread(() -> {
+                    barrier.dismiss();
+                    Intent intent = new Intent(PojavLoginActivity.this, JavaGUILauncherActivity.class);
+                    intent.putExtra("modFile", modInstallerFile);
+                    startActivity(intent);
+                });
+            }catch(IOException e) {
+                //Tools.showError(PojavLoginActivity.this,e);
+            }
+        });
+        t.start();
     }
     
     @Override
     public void onResume() {
         super.onResume();
-        
         Tools.updateWindowSize(this);
-
     }
 
    
@@ -225,30 +218,13 @@ public class PojavLoginActivity extends BaseActivity
             }
         }
     }
-    public static void disableSplash(String dir) {
-        mkdirs(dir + "/config");
-        File forgeSplashFile = new File(dir, "config/splash.properties");
-        String forgeSplashContent = "enabled=true";
-        try {
-            if (forgeSplashFile.exists()) {
-                forgeSplashContent = Tools.read(forgeSplashFile.getAbsolutePath());
-            }
-            if (forgeSplashContent.contains("enabled=true")) {
-                Tools.write(forgeSplashFile.getAbsolutePath(),
-                        forgeSplashContent.replace("enabled=true", "enabled=false"));
-            }
-        } catch (IOException e) {
-            Log.w(Tools.APP_NAME, "Could not disable Forge 1.12.2 and below splash screen!", e);
-        }
-    }
     private void initMain() throws Throwable {
         mkdirs(Tools.DIR_ACCOUNT_NEW);
-        
         mkdirs(Tools.DIR_GAME_HOME);
         mkdirs(Tools.DIR_GAME_HOME + "/lwjgl3");
         mkdirs(Tools.DIR_GAME_HOME + "/config");
-
         mkdirs(Tools.CTRLMAP_PATH);
+
 
         try {
 
@@ -340,46 +316,7 @@ public class PojavLoginActivity extends BaseActivity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
     }
-    public void performMicroLogin(Intent intent) {
-        Uri data = intent.getData();
-        //Log.i("MicroAuth", data.toString());
-        if (data != null && data.getScheme().equals("ms-xal-00000000402b5328") && data.getHost().equals("auth")) {
-            String error = data.getQueryParameter("error");
-            String error_description = data.getQueryParameter("error_description");
-            if (error != null) {
-                // "The user has denied access to the scope requested by the client application": user pressed Cancel button, skip it
-                if (!error_description.startsWith("The user has denied access to the scope requested by the client application")) {
-                    Toast.makeText(this, "Error: " + error + ": " + error_description, Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
-    private View getViewFromList(int pos, ListView listView) {
-        final int firstItemPos = listView.getFirstVisiblePosition();
-        final int lastItemPos = firstItemPos + listView.getChildCount() - 1;
 
-        if (pos < firstItemPos || pos > lastItemPos ) {
-            return listView.getAdapter().getView(pos, null, listView);
-        } else {
-            final int childIndex = pos - firstItemPos;
-            return listView.getChildAt(childIndex);
-        }
-    }
-
-
-    private void playProfile(boolean notOnLogin) {
-    }
-
-    public static String strArrToString(String[] strArr)
-    {
-        String[] strArrEdit = strArr.clone();
-        strArrEdit[0] = "";
-
-        String str = Arrays.toString(strArrEdit);
-        str = str.substring(1, str.length() - 1).replace(",", "\n");
-
-        return str;
-    }
     //We are calling this method to check the permission status
     private boolean isStorageAllowed() {
         //Getting the permission status
@@ -408,17 +345,6 @@ public class PojavLoginActivity extends BaseActivity
                 mLockStoragePerm.notifyAll();
             }
         }
-    }
-
-    //When the user have no saved account, you can show him this dialog
-    private void showNoAccountDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(PojavLoginActivity.this);
-
-        builder.setMessage(R.string.login_dialog_no_saved_account)
-                .setTitle(R.string.login_title_no_saved_account)
-                .setPositiveButton(android.R.string.ok, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
 }

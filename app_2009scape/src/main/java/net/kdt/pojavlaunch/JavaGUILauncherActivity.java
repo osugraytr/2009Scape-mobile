@@ -93,27 +93,20 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        
         setContentView(R.layout.install_mod);
         Tools.updateWindowSize(this);
-        Logger.getInstance().reset();
 
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
         longTapGestureDetector = new SimpleGestureListener();
 
         try {
-            loggerView = findViewById(R.id.launcherLoggerView);
             MultiRTUtils.setRuntimeNamed(this,LauncherPreferences.PREF_DEFAULT_RUNTIME);
             gestureDetector = new GestureDetector(this, new SingleTapConfirm());
 
-            findViewById(R.id.installmod_mouse_pri).setOnTouchListener(this);
-            findViewById(R.id.installmod_mouse_sec).setOnTouchListener(this);
-
+            findViewById(R.id.keyboard).setOnTouchListener(this);
             findViewById(R.id.camera).setOnTouchListener(this);
-
+            findViewById(R.id.mb2).setOnTouchListener(this);
             this.touchPad = findViewById(R.id.main_touchpad);
-            touchPad.setFocusable(false);
             touchPad.setVisibility(View.VISIBLE);
 
             this.mousePointer = findViewById(R.id.main_mouse_pointer);
@@ -164,8 +157,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                         }
 
                         // debugText.setText(CallbackBridge.DEBUG_STRING.toString());
-                        CallbackBridge.DEBUG_STRING.setLength(0);
-
+                        //CallbackBridge.DEBUG_STRING.setLength(0);
                         return true;
                     }
                 });
@@ -213,11 +205,11 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         long time = System.currentTimeMillis();
         if (time > lastPress + 500) {
             switch (v.getId()) {
-                case R.id.installmod_mouse_pri:
+                case R.id.keyboard:
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
                     break;
-                case R.id.installmod_mouse_sec:
+                case R.id.mb2:
                     if (!rcState) {
                         System.out.println("Sending F11");
                         activateRC();
@@ -346,13 +338,13 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     private void clearRC(){
         rcState = false;
         AWTInputBridge.sendKey((char)121,121);
-        findViewById(R.id.installmod_mouse_sec).setBackground(getResources().getDrawable( R.drawable.control_button ));
+        findViewById(R.id.mb2).setBackground(getResources().getDrawable( R.drawable.control_button ));
     }
 
     private void activateRC(){
         rcState = true;
         AWTInputBridge.sendKey((char)122,122);
-        findViewById(R.id.installmod_mouse_sec).setBackground(getResources().getDrawable( R.drawable.control_button_pressed ));
+        findViewById(R.id.mb2).setBackground(getResources().getDrawable( R.drawable.control_button_pressed ));
     }
 
     public void placeMouseAt(float x, float y) {
@@ -368,9 +360,13 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     public void toggleVirtualMouse(View v) {
         isVirtualMouseEnabled = !isVirtualMouseEnabled;
         touchPad.setVisibility(isVirtualMouseEnabled ? View.GONE : View.VISIBLE);
-        Toast.makeText(this,
-                isVirtualMouseEnabled ? R.string.control_mouseoff : R.string.control_mouseon,
-                Toast.LENGTH_SHORT).show();
+        ImageView view = findViewById(R.id.mouse_button_img);
+        if(isVirtualMouseEnabled){
+            view.setImageResource(R.drawable.touch);
+        } else{
+            view.setImageResource(R.drawable.ic_mouse3);
+        }
+        touchPad.setVisibility(isVirtualMouseEnabled ? View.GONE : View.VISIBLE);
     }
 
     public int launchJavaRuntime(File modFile, String javaArgs) {

@@ -10,20 +10,10 @@ import net.kdt.pojavlaunch.R;
 public class BackButtonPreference extends Preference {
     public BackButtonPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public BackButtonPreference(Context context) {
         this(context, null);
-    }
-
-    private void init(){
-        if(getTitle() == null){
-            setTitle(R.string.preference_back_title);
-        }
-        if(getIcon() == null){
-            setIcon(R.drawable.ic_arrow_back_white);
-        }
     }
 
 

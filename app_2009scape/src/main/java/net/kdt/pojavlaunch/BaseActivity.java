@@ -15,21 +15,4 @@ public class BaseActivity extends AppCompatActivity
         Tools.setFullscreen(this);
         Tools.updateWindowSize(this);
     }
-    
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleUtils.setLocale(base));
-    }
-
-    @Override
-    public void startActivity(Intent i) {
-        super.startActivity(i);
-        new Throwable("StartActivity").printStackTrace();
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        Tools.ignoreNotch(PREF_IGNORE_NOTCH,this);
-    }
 }

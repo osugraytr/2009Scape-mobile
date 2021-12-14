@@ -172,8 +172,6 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
                         canvas.restore();
 
                     }
-                    rgbArray = null;
-                    // System.gc();
                 }
                 canvas.drawText("FPS: " + (Math.round(fps() * 10) / 10) + ", attached=" + attached + ", drawing=" + mDrawing, 50, 50, fpsPaint);
                 mSurface.unlockCanvasAndPost(canvas);
