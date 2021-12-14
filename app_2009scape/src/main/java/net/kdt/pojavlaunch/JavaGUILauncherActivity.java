@@ -116,6 +116,11 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 params.height = (int) (54 / 100f * LauncherPreferences.PREF_MOUSESCALE);
             });
 
+            // Just to get the scaled mouse on startup.
+            ViewGroup.LayoutParams params = mousePointer.getLayoutParams();
+            params.width = (int) (36 / 100f * LauncherPreferences.PREF_MOUSESCALE);
+            params.height = (int) (54 / 100f * LauncherPreferences.PREF_MOUSESCALE);
+
             touchPad.setOnTouchListener(new OnTouchListener(){
                     private float prevX, prevY;
                     @Override
