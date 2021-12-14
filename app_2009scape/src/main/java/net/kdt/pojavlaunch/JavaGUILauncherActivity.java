@@ -3,7 +3,6 @@ package net.kdt.pojavlaunch;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.*;
-import android.util.*;
 import android.view.*;
 import android.view.View.*;
 import android.view.inputmethod.InputMethodManager;
@@ -26,7 +25,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     
     private AWTCanvasView mTextureView;
 
-    String specialChars = "/*!@#$%^&*()\"{}_[+=-_]\'|\\?/<>,.";
+    String specialChars = "/*!@#$%^&*()\"{}_[+:;=-_]'|\\?/<>,.";
     private LoggerView loggerView;
     private boolean mouseState = false;
 
@@ -39,34 +38,16 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
     private boolean rcState = false;
 
-    private boolean mSkipDetectMod, isVirtualMouseEnabled;
+    private boolean isVirtualMouseEnabled;
 
     private int scaleFactor;
-    private int[] scaleFactors = initScaleFactors();
+    public float[] scaleFactors = initScaleFactors();
 
     private final int fingerStillThreshold = 8;
     private int initialX;
     private int initialY;
-    @SuppressLint("HandlerLeak")
-    private Handler theHandler = new Handler() {
-        @SuppressLint("HandlerLeak")
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_LEFT_MOUSE_BUTTON_CHECK: {
-                        float x = CallbackBridge.mouseX;
-                        float y = CallbackBridge.mouseY;
-                        if (CallbackBridge.isGrabbing() &&
-                            Math.abs(initialX - x) < fingerStillThreshold &&
-                            Math.abs(initialY - y) < fingerStillThreshold) {
-                            boolean triggeredLeftMouseButton = true;
-                            AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK, true);
-                        }
-                    } break;
-            }
-        }
-    };
 
-    public class MyOnScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+    public class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
@@ -118,7 +99,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         Tools.updateWindowSize(this);
         Logger.getInstance().reset();
 
-        scaleGestureDetector = new ScaleGestureDetector(this, new MyOnScaleGestureListener());
+        scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
         longTapGestureDetector = new SimpleGestureListener();
 
         try {
@@ -178,12 +159,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                                     placeMouseAt(mouseX, mouseY);
 
                                     sendScaledMousePosition(mouseX,mouseY);
-                                    /*
-                                     if (!CallbackBridge.isGrabbing()) {
-                                     CallbackBridge.sendMouseKeycode(LWJGLGLFWKeycode.GLFW_MOUSE_BUTTON_LEFT, 0, isLeftMouseDown);
-                                     CallbackBridge.sendMouseKeycode(LWJGLGLFWKeycode.GLFW_MOUSE_BUTTON_RIGHT, 0, isRightMouseDown);
-                                     }
-                                     */
                                     break;
                             }
                         }
@@ -196,9 +171,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 });
                 
             placeMouseAt(CallbackBridge.physicalWidth / 2, CallbackBridge.physicalHeight / 2);
-
-            // this.textLogBehindGL = (TextView) findViewById(R.id.main_log_behind_GL);
-            // this.textLogBehindGL.setTypeface(Typeface.MONOSPACE);
 
             final File modFile = (File) getIntent().getExtras().getSerializable("modFile");
             final String javaArgs = getIntent().getExtras().getString("javaArgs");
@@ -224,28 +196,16 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 }
                 return true;
             });
-           
-            mSkipDetectMod = getIntent().getExtras().getBoolean("skipDetectMod", false);
-            if (mSkipDetectMod) {
-                new Thread(() -> launchJavaRuntime(modFile, javaArgs), "JREMainThread").start();
-                return;
-            }
-            // No skip detection
-            //openLogOutput(null);
             new Thread(() -> {
                 try {
-                    final int exit = doCustomInstall(modFile, javaArgs);
-                    Logger.getInstance().appendToLog(getString(R.string.toast_optifine_success));
+                    launchJavaRuntime(modFile, javaArgs);
                 } catch (Throwable e) {
-                    Logger.getInstance().appendToLog("Install failed:");
-                    Logger.getInstance().appendToLog(Log.getStackTraceString(e));
                     Tools.showError(JavaGUILauncherActivity.this, e);
                 }
-            }, "Installer").start();
+            }, "2009Scape").start();
         } catch (Throwable th) {
             Tools.showError(this, th, true);
         }
-        //scaleUp(mTextureView);
     }
 
     @Override
@@ -268,13 +228,12 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                     System.out.println("Time:" + time + " Last " + lastPress);
                     break;
                 case R.id.camera:
-                    // Camera Mode On
-                    if(!mouseState){
+                    if(!mouseState){ // Camera Mode On
                         AWTInputBridge.sendKey((char)120,120);
                         v.setBackground(getResources().getDrawable( R.drawable.control_button_pressed ));
                         mouseState = true;
                     }
-                    else{
+                    else{ // Camera Mode off
                         AWTInputBridge.sendKey((char)119,119);
                         v.setBackground(getResources().getDrawable( R.drawable.control_button_normal ));
                         mouseState = false;
@@ -289,18 +248,13 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if(event.getAction() == KeyEvent.ACTION_DOWN){
-            /*
-            Log.i("key getKeycode", String.valueOf(event.getKeyCode()));
-            Log.i("key unicode", String.valueOf((char)event.getUnicodeChar()));
-            Log.i("key unicode int", String.valueOf(event.getUnicodeChar()));
-            */
             if(event.getKeyCode() == 67){
                 // Backspace
                 AWTInputBridge.sendKey((char)0x08,0x08);
             } else if(specialChars.contains(""+(char)event.getUnicodeChar())){
                 // Send special character to client
                 char c = (char)event.getUnicodeChar();
-                switch((char)event.getUnicodeChar()){
+                switch(c){
                     case '!':
                         c = '1';
                         break;
@@ -401,11 +355,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         findViewById(R.id.installmod_mouse_sec).setBackground(getResources().getDrawable( R.drawable.control_button_pressed ));
     }
 
-    public void placeMouseAdd(float x, float y) {
-        this.mousePointer.setX(mousePointer.getX() + x);
-        this.mousePointer.setY(mousePointer.getY() + y);
-    }
-
     public void placeMouseAt(float x, float y) {
         this.mousePointer.setX(x);
         this.mousePointer.setY(y);
@@ -416,22 +365,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 (int) map(y,0,CallbackBridge.physicalHeight, scaleFactors[1], scaleFactors[3]));
     }
 
-    public void forceClose(View v) {
-        BaseMainActivity.dialogForceClose(this);
-    }
-
-    public void openLogOutput(View v) {
-        loggerView.setVisibility(View.VISIBLE);
-    }
-
-    public void closeLogOutput(View view) {
-        if (mSkipDetectMod) {
-            loggerView.setVisibility(View.GONE);
-        } else {
-            forceClose(null);
-        }
-    }
-
     public void toggleVirtualMouse(View v) {
         isVirtualMouseEnabled = !isVirtualMouseEnabled;
         touchPad.setVisibility(isVirtualMouseEnabled ? View.GONE : View.VISIBLE);
@@ -439,22 +372,11 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 isVirtualMouseEnabled ? R.string.control_mouseoff : R.string.control_mouseon,
                 Toast.LENGTH_SHORT).show();
     }
-    
-    private int doCustomInstall(File modFile, String javaArgs) throws IOException {
-        mSkipDetectMod = true;
-        return launchJavaRuntime(modFile, javaArgs);
-    }
 
     public int launchJavaRuntime(File modFile, String javaArgs) {
         JREUtils.redirectAndPrintJRELog(this);
         try {
             JREUtils.jreReleaseList = JREUtils.readJREReleaseProperties();
-            
-            // Fail immediately when Java 8 is not selected
-            // TODO: auto override Java 8 if installed
-            if (!JREUtils.jreReleaseList.get("JAVA_VERSION").equals("1.8.0")) {
-                throw new RuntimeException("Cannot use the mod installer. In order to use the mod installer, you need to install Java 8 and specify it in the Preferences menu.");
-            }
             
             List<String> javaArgList = new ArrayList<String>();
 
@@ -492,11 +414,11 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         decorView.setSystemUiVisibility(uiOptions);
     }
 
-    int[] initScaleFactors(){
+    float[] initScaleFactors(){
         return initScaleFactors(true);
     }
 
-    int[] initScaleFactors(boolean autoScale){
+    float[] initScaleFactors(boolean autoScale){
         //Could be optimized
 
         if(autoScale) { //Auto scale
@@ -504,7 +426,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             scaleFactor = Math.max(((3 * minDimension) / 1080) - 1, 1);
         }
 
-        int[] scales = new int[4]; //Left, Top, Right, Bottom
+        float[] scales = new float[4]; //Left, Top, Right, Bottom
 
         scales[0] = (CallbackBridge.physicalWidth/2);
         scales[0] -= scales[0]/scaleFactor;

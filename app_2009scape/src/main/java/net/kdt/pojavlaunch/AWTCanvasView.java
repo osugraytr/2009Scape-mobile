@@ -1,25 +1,22 @@
 package net.kdt.pojavlaunch;
 
-import android.annotation.SuppressLint;
 import android.content.*;
 import android.graphics.*;
-import android.os.Build;
 import android.text.*;
 import android.util.*;
 import android.view.*;
-
-import androidx.annotation.RequiresApi;
 
 import java.util.*;
 import net.kdt.pojavlaunch.utils.*;
 import org.lwjgl.glfw.*;
 
 public class AWTCanvasView extends TextureView implements TextureView.SurfaceTextureListener, Runnable {
-    private int mScaleFactor;
-    private int[] mScales;
+    private float mScaleFactor;
+    private float[] mScales;
     public int offsetX = 0;
     public int offsetY = 0;
-    private boolean original = true;
+    private float[] stretchOffsets;
+    private float[] stretchScales;
 
     private int mWidth, mHeight;
     private boolean mIsDestroyed = false;
@@ -56,7 +53,7 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
         initScaleFactors(0);
     }
 
-    void initScaleFactors(int forcedScale){
+    void initScaleFactors(float forcedScale){
         //Could be optimized
         if(forcedScale < 1) { //Auto scale
             int minDimension = Math.min(CallbackBridge.physicalHeight, CallbackBridge.physicalWidth);
@@ -65,7 +62,7 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
             mScaleFactor = forcedScale;
         }
 
-        int[] scales = new int[2]; //Left, Top
+        float[] scales = new float[2]; //Left, Top
 
         scales[0] = (CallbackBridge.physicalWidth/2);
         scales[0] -= scales[0]/mScaleFactor;
@@ -74,6 +71,31 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
         scales[1] -= scales[1]/mScaleFactor;
 
         mScales = scales;
+    }
+
+    void initStretchedModes(){
+
+        float[] offsets = new float[2];
+        float[] scales = new float[4];
+        // Full screen stretched
+        offsets[0] -= mScales[0]*1.33F;
+        offsets[1] -= mScales[1]*1.02F;
+
+        // 16:9 Stretched
+
+
+
+        // Fullscreen stretched
+        scales[0] = (CallbackBridge.physicalWidth/2)/765;
+        scales[1] = (CallbackBridge.physicalHeight/2)/503;
+
+        // 16:9 stretched
+        scales[2] = (CallbackBridge.physicalWidth/2)/894.22F;
+        scales[3] = (CallbackBridge.physicalHeight/2)/503;
+
+        stretchScales = scales;
+        stretchOffsets = offsets;
+
     }
     
     public AWTCanvasView(Context ctx) {
@@ -90,6 +112,7 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
         
         setSurfaceTextureListener(this);
         initScaleFactors();
+        initStretchedModes();
     }
 
     @Override
@@ -105,11 +128,6 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
     public boolean onSurfaceTextureDestroyed(SurfaceTexture texture) {
         mIsDestroyed = true;
         return true;
-    }
-
-    @Override
-    protected void onSizeChanged(int xNew, int yNew, int xOld, int yOld) {
-        super.onSizeChanged(xNew, yNew, xOld, yOld);
     }
 
     @Override
@@ -141,7 +159,13 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
                     mDrawing = rgbArray != null;
                     if (rgbArray != null) {
 
+
                         canvas.save();
+                        // 16:9~ Scaled
+                        //System.out.println("Factor: "+mScaleFactor);
+                        //canvas.scale(mScaleFactor*1.17F, mScaleFactor);
+                        //canvas.translate(-mScales[0]*1.17F,-mScales[1]);
+                        //
                         canvas.scale(mScaleFactor, mScaleFactor);
                         canvas.translate(-mScales[0],-mScales[1]);
                         canvas.drawBitmap(rgbArray, 0, CallbackBridge.physicalWidth, offsetX, offsetY, CallbackBridge.physicalWidth, CallbackBridge.physicalHeight, true, null);
