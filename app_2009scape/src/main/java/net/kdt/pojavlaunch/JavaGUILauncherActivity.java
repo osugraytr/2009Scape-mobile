@@ -135,7 +135,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                         totalMovement += Math.abs(x - prevX) + Math.abs(y - prevX);
                         if(!longPressTriggered &&
                             System.currentTimeMillis() - touchStart > 1000 &&
-                            totalMovement < 2000
+                            totalMovement < 5000
                         ){
                             longPressTriggered = true;
                             AWTInputBridge.sendKey((char)118,118);
@@ -155,7 +155,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                                 case MotionEvent.ACTION_UP: // 1
                                     if(longPressTriggered){
                                         AWTInputBridge.sendKey((char)117,117);
-                                        //AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
+                                        AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
                                     }
                                     break;
                                 case MotionEvent.ACTION_CANCEL: // 3
