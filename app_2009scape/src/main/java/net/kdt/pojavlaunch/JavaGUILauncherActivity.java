@@ -3,7 +3,7 @@ package net.kdt.pojavlaunch;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.*;
-import android.util.Log;
+import android.os.Vibrator;
 import android.view.*;
 import android.view.View.*;
 import android.view.inputmethod.InputMethodManager;
@@ -81,6 +81,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.install_mod);
         Tools.updateWindowSize(this);
+        Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         try {
             MultiRTUtils.setRuntimeNamed(this,LauncherPreferences.PREF_DEFAULT_RUNTIME);
@@ -134,12 +135,17 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                         // Long press
                         totalMovement += Math.abs(x - prevX) + Math.abs(y - prevX);
                         if(!longPressTriggered &&
-                            System.currentTimeMillis() - touchStart > 1000 &&
-                            totalMovement < 5000
+                            System.currentTimeMillis() - touchStart > 1500 &&
+                            totalMovement < 8000
                         ){
                             longPressTriggered = true;
                             AWTInputBridge.sendKey((char)118,118);
-                            System.out.println("LONG PRESS!");
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                vb.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+                            } else {
+                                //deprecated in API 26
+                                vb.vibrate(100);
+                            }
                             return true;
                         }
 
@@ -154,7 +160,11 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                                     AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
                                 case MotionEvent.ACTION_UP: // 1
                                     if(longPressTriggered){
-                                        AWTInputBridge.sendKey((char)117,117);
+                                        // Currently a click is needed to end the drag. MB1
+                                        // is not good for banking so MB2 sending instead. Annoying but
+                                        // better than the alternative. other buttons 'MB3' ect same outcome
+                                        // probably should null the click on client if isHeld is true.
+                                        AWTInputBridge.sendKey((char)122,122);
                                         AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
                                     }
                                     break;
