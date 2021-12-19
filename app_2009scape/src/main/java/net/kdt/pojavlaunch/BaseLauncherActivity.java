@@ -139,7 +139,7 @@ public abstract class BaseLauncherActivity extends BaseActivity {
                 if (data == null) return;
 
                 //final Uri uri = data.getData();
-                Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.beta);
+                Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.miniclient);
                 String path = uri.getPath();
                 //File modFile = new File(new URI(path));
 

@@ -2,8 +2,10 @@ package net.kdt.pojavlaunch;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.*;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.*;
 import android.view.View.*;
 import android.view.inputmethod.InputMethodManager;
@@ -91,6 +93,8 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             findViewById(R.id.keyboard).setOnTouchListener(this);
             findViewById(R.id.camera).setOnTouchListener(this);
             findViewById(R.id.mb2).setOnTouchListener(this);
+
+
             this.touchPad = findViewById(R.id.main_touchpad);
             touchPad.setVisibility(View.VISIBLE);
 
@@ -187,7 +191,8 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 
             placeMouseAt(CallbackBridge.physicalWidth / 2, CallbackBridge.physicalHeight / 2);
 
-            final File modFile = (File) getIntent().getExtras().getSerializable("modFile");
+            final File miniclient = (File) getIntent().getExtras().getSerializable("miniclient");
+            final File config = new File(getFilesDir(), "config.json");
             final String javaArgs = getIntent().getExtras().getString("javaArgs");
 
             mTextureView = findViewById(R.id.installmod_surfaceview);
@@ -213,7 +218,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             });
             new Thread(() -> {
                 try {
-                    launchJavaRuntime(modFile, javaArgs);
+                    launchJavaRuntime(miniclient, javaArgs,config);
                 } catch (Throwable e) {
                     Tools.showError(JavaGUILauncherActivity.this, e);
                 }
@@ -392,7 +397,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         touchPad.setVisibility(isVirtualMouseEnabled ? View.GONE : View.VISIBLE);
     }
 
-    public int launchJavaRuntime(File modFile, String javaArgs) {
+    public int launchJavaRuntime(File miniclient, String javaArgs,File config) {
         JREUtils.redirectAndPrintJRELog(this);
         try {
             JREUtils.jreReleaseList = JREUtils.readJREReleaseProperties();
@@ -406,13 +411,18 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 javaArgList.addAll(Arrays.asList(javaArgs.split(" ")));
             } else {
                 javaArgList.add("-jar");
-                javaArgList.add(modFile.getAbsolutePath());
+                javaArgList.add(miniclient.getAbsolutePath());
+                javaArgList.add(config.getAbsolutePath()); // Pass client config as arg0
+                javaArgList.add("username=miniclientparam:");
+                javaArgList.add("password=miniclientparam:");
             }
 
             Logger.getInstance().appendToLog("Info: Java arguments: " + Arrays.toString(javaArgList.toArray(new String[0])));
+            Log.i("Info: Java arguments: ",Arrays.toString(javaArgList.toArray(new String[0])));
             
             // Run java on sandbox, non-overrideable.
             Collections.reverse(javaArgList);
+
             javaArgList.add("-Xbootclasspath/a:" + Tools.DIR_DATA + "/pro-grade.jar");
             javaArgList.add("-Djava.security.manager=net.sourceforge.prograde.sm.ProGradeJSM");
             javaArgList.add("-Djava.security.policy=" + Tools.DIR_DATA + "/java_sandbox.policy");

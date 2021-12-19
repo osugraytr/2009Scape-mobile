@@ -6,6 +6,7 @@ import static net.kdt.pojavlaunch.Tools.getFileName;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -19,14 +20,12 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -42,7 +41,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 public class PojavLoginActivity extends BaseActivity
 // MineActivity
@@ -155,20 +153,20 @@ public class PojavLoginActivity extends BaseActivity
         barrier.setCancelable(false);
         barrier.show();
 
-        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.beta);
+        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.miniclient);
 
         barrier.setMessage(PojavLoginActivity.this.getString(R.string.multirt_progress_caching));
         Thread t = new Thread(()->{
             try {
                 final String name = getFileName(this, uri);
-                final File modInstallerFile = new File(getCacheDir(), name);
-                FileOutputStream fos = new FileOutputStream(modInstallerFile);
+                final File miniclient = new File(getCacheDir(), name);
+                FileOutputStream fos = new FileOutputStream(miniclient);
                 IOUtils.copy(getContentResolver().openInputStream(uri), fos);
                 fos.close();
                 PojavLoginActivity.this.runOnUiThread(() -> {
                     barrier.dismiss();
                     Intent intent = new Intent(PojavLoginActivity.this, JavaGUILauncherActivity.class);
-                    intent.putExtra("modFile", modInstallerFile);
+                    intent.putExtra("miniclient", miniclient);
                     startActivity(intent);
                 });
             }catch(IOException e) {
@@ -219,6 +217,23 @@ public class PojavLoginActivity extends BaseActivity
         }
     }
     private void initMain() throws Throwable {
+        // Copy config.json to writable storage
+        // https://stackoverflow.com/questions/38590996/copy-xml-from-raw-folder-to-internal-storage-and-use-it-in-android
+        File file = new File(getFilesDir(), "config.json");
+        try {
+            Context context = getApplicationContext();
+            InputStream inputStream = context.getResources().openRawResource(R.raw.config);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            byte buf[]=new byte[1024];
+            int len;
+            while((len=inputStream.read(buf))>0) {
+                fileOutputStream.write(buf,0,len);
+            }
+            fileOutputStream.close();
+            inputStream.close();
+            System.out.println("Write to Local");
+        } catch (IOException e1) {}
+
         mkdirs(Tools.DIR_ACCOUNT_NEW);
         mkdirs(Tools.DIR_GAME_HOME);
         mkdirs(Tools.DIR_GAME_HOME + "/lwjgl3");
