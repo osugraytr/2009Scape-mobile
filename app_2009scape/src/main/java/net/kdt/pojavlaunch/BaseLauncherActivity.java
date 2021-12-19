@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 
 import java.io.*;
 
-import net.kdt.pojavlaunch.multirt.MultiRTConfigDialog;
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;
 import net.kdt.pojavlaunch.prefs.*;
 
@@ -22,7 +21,6 @@ public abstract class BaseLauncherActivity extends BaseActivity {
 	public Button mPlayButton;
     public ProgressBar mLaunchProgress;
 	public Spinner mVersionSelector;
-	public MultiRTConfigDialog mRuntimeConfigDialog;
 	public TextView mLaunchTextStatus;
 
 	public String[] mAvailableVersions;
@@ -93,8 +91,6 @@ public abstract class BaseLauncherActivity extends BaseActivity {
         }
         LauncherPreferences.DEFAULT_PREF.registerOnSharedPreferenceChangeListener(listRefreshListener);
         System.out.println("call to onResumeFragments");
-        mRuntimeConfigDialog = new MultiRTConfigDialog();
-        mRuntimeConfigDialog.prepare(this);
 
         //TODO ADD CRASH CHECK AND FOCUS
         System.out.println("call to onResumeFragments; E");
@@ -109,30 +105,6 @@ public abstract class BaseLauncherActivity extends BaseActivity {
             barrier.setProgressStyle(barrier.STYLE_SPINNER);
             barrier.setCancelable(false);
             barrier.show();
-
-            // Install the runtime
-            if (requestCode == MultiRTConfigDialog.MULTIRT_PICK_RUNTIME) {
-                if (data == null) return;
-
-                final Uri uri = data.getData();
-                Thread t = new Thread(() -> {
-                    try {
-                        String name = getFileName(this, uri);
-                        MultiRTUtils.installRuntimeNamed(getContentResolver().openInputStream(uri), name,
-                                (resid, stuff) -> BaseLauncherActivity.this.runOnUiThread(
-                                        () -> barrier.setMessage(BaseLauncherActivity.this.getString(resid, stuff))));
-                        MultiRTUtils.postPrepare(BaseLauncherActivity.this, name);
-                    } catch (IOException e) {
-                        Tools.showError(BaseLauncherActivity.this, e);
-                    }
-                    BaseLauncherActivity.this.runOnUiThread(() -> {
-                        barrier.dismiss();
-                        mRuntimeConfigDialog.refresh();
-                        mRuntimeConfigDialog.dialog.show();
-                    });
-                });
-                t.start();
-            }
 
             // Run a mod installer
             if (requestCode == RUN_MOD_INSTALLER) {

@@ -56,28 +56,9 @@ public class RTSpinnerAdapter implements SpinnerAdapter {
         return true;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View v = convertView!=null?
-                convertView:
-                LayoutInflater.from(ctx).inflate(R.layout.multirt_recyclable_view,parent,false);
-
-        MultiRTUtils.Runtime rt = runtimes.get(position);
-
-        final TextView javaVersionView = v.findViewById(R.id.multirt_view_java_version);
-        final TextView fullJavaVersionView = v.findViewById(R.id.multirt_view_java_version_full);
-        v.findViewById(R.id.multirt_view_removebtn).setVisibility(View.GONE);
-        v.findViewById(R.id.multirt_view_setdefaultbtn).setVisibility(View.GONE);
-
-        if(rt.versionString != null) {
-            javaVersionView.setText(ctx.getString(R.string.multirt_java_ver, rt.name, rt.javaVersion));
-            fullJavaVersionView.setText(rt.versionString);
-        }else{
-            javaVersionView.setText(rt.name);
-            fullJavaVersionView.setText(R.string.multirt_runtime_corrupt);
-        }
-        return v;
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        return null;
     }
 
     @Override

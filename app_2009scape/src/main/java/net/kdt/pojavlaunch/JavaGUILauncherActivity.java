@@ -3,6 +3,7 @@ package net.kdt.pojavlaunch;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.*;
 import android.os.Vibrator;
 import android.util.Log;
@@ -20,6 +21,8 @@ import net.kdt.pojavlaunch.utils.*;
 import org.lwjgl.glfw.*;
 
 import static net.kdt.pojavlaunch.utils.MathUtils.map;
+
+import androidx.preference.PreferenceManager;
 
 import com.kdt.LoggerView;
 
@@ -94,6 +97,34 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             findViewById(R.id.camera).setOnTouchListener(this);
             findViewById(R.id.mb2).setOnTouchListener(this);
 
+            // Righthanded Flip UI
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            if(Boolean.parseBoolean(preferences.getString("righthanded",""))){
+                RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) findViewById(R.id.keyboard).getLayoutParams();
+                lp.addRule(RelativeLayout.ALIGN_PARENT_END);
+                RelativeLayout.LayoutParams lp1 = (RelativeLayout.LayoutParams) findViewById(R.id.mb2).getLayoutParams();
+                lp1.addRule(RelativeLayout.LEFT_OF,R.id.keyboard);
+                lp1.addRule(RelativeLayout.RIGHT_OF); // Clear right of prop
+                RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) findViewById(R.id.main_toggle_mouse).getLayoutParams();
+                lp2.addRule(RelativeLayout.LEFT_OF,R.id.keyboard);
+                RelativeLayout.LayoutParams lp3 = (RelativeLayout.LayoutParams) findViewById(R.id.installmod_scale_down).getLayoutParams();
+                lp3.addRule(RelativeLayout.LEFT_OF,R.id.keyboard);
+                RelativeLayout.LayoutParams lp4 = (RelativeLayout.LayoutParams) findViewById(R.id.menu).getLayoutParams();
+                lp4.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            } else {
+                // Just a hack to get the settings icon to align to right by default.
+                RelativeLayout.LayoutParams lp4 = (RelativeLayout.LayoutParams) findViewById(R.id.menu).getLayoutParams();
+                lp4.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            }
+
+
+            // Launch Settings Popup
+            findViewById(R.id.menu).setOnTouchListener((view, motionEvent) -> {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                    startActivity(new Intent(JavaGUILauncherActivity.this, SettingsMenu.class));
+                }
+                return false;
+            });
 
             this.touchPad = findViewById(R.id.main_touchpad);
             touchPad.setVisibility(View.VISIBLE);
@@ -399,6 +430,12 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
     public int launchJavaRuntime(File miniclient, String javaArgs,File config) {
         JREUtils.redirectAndPrintJRELog(this);
+
+        // Load saved username and password
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String name = preferences.getString("username","");
+        String pass= preferences.getString("password","");
+
         try {
             JREUtils.jreReleaseList = JREUtils.readJREReleaseProperties();
             
@@ -413,8 +450,8 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 javaArgList.add("-jar");
                 javaArgList.add(miniclient.getAbsolutePath());
                 javaArgList.add(config.getAbsolutePath()); // Pass client config as arg0
-                javaArgList.add("username=miniclientparam:");
-                javaArgList.add("password=miniclientparam:");
+                javaArgList.add("username=miniclientparam:"+name);
+                javaArgList.add("password=miniclientparam:"+pass);
             }
 
             Logger.getInstance().appendToLog("Info: Java arguments: " + Arrays.toString(javaArgList.toArray(new String[0])));

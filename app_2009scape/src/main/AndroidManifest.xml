@@ -40,25 +40,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="net.kdt.pojavlaunch.ImportControlActivity"
-            android:exported="true"
-            android:windowSoftInputMode="stateVisible"
-            android:launchMode="singleInstance"
-            android:configChanges="keyboard|keyboardHidden"
-            >
-
-            <intent-filter android:scheme="content"
-                android:label="@string/import_control_label"
-                tools:ignore="AppLinkUrlError">
-                <action android:name="android.intent.action.VIEW"/>
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="application/json"/>
-                <data android:mimeType="text/json"/>
-                <data android:mimeType="text/plain"/>
-            </intent-filter>
-        </activity>
+        
+        <activity android:name=".SettingsMenu"></activity>
 
         <activity
             android:theme="@style/MenuDialog"

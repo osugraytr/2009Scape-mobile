@@ -29,7 +29,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import net.kdt.pojavlaunch.multirt.MultiRTConfigDialog;
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 
@@ -254,7 +253,6 @@ public class PojavLoginActivity extends BaseActivity
             unpackComponent(am, "caciocavallo");
             unpackComponent(am, "lwjgl3");
             if(!installRuntimeAutomatically(am,MultiRTUtils.getRuntimes().size() > 0)) {
-               MultiRTConfigDialog.openRuntimeSelector(this, MultiRTConfigDialog.MULTIRT_PICK_RUNTIME_STARTUP);
                 synchronized (mLockSelectJRE) {
                     mLockSelectJRE.wait();
                 }
@@ -263,34 +261,6 @@ public class PojavLoginActivity extends BaseActivity
         }
         catch(Throwable e){
             Tools.showError(this, e);
-        }
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Activity.RESULT_OK) {
-            if (requestCode == MultiRTConfigDialog.MULTIRT_PICK_RUNTIME_STARTUP) {
-                if (data != null) {
-                    final Uri uri = data.getData();
-                    Thread t = new Thread(() -> {
-                        try {
-                            MultiRTUtils.installRuntimeNamed(getContentResolver().openInputStream(uri), getFileName(this, uri),
-                                    (resid, stuff) -> PojavLoginActivity.this.runOnUiThread(
-                                            () -> {
-                                                if (startupTextView != null)
-                                                    startupTextView.setText(PojavLoginActivity.this.getString(resid, stuff));
-                                            }));
-                            synchronized (mLockSelectJRE) {
-                                mLockSelectJRE.notifyAll();
-                            }
-                        } catch (IOException e) {
-                            Tools.showError(PojavLoginActivity.this
-                                    , e);
-                        }
-                    });
-                    t.start();
-                }
-            }
         }
     }
     private boolean installRuntimeAutomatically(AssetManager am, boolean otherRuntimesAvailable) {
