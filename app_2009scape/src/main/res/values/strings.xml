@@ -220,7 +220,6 @@
     <string name="main_no_news_feed">Failed to fetch the news feed !</string>
     <string name="auto_ram_subtitle">Enables automatic RAM adjuster</string>
     <string name="auto_ram_title">Auto RAM</string>
-    <string name="autoram_info_msg">Memory set to %d MB</string>
     <string name="mcl_setting_check_libraries">Check libraries after downloading</string>
     <string name="mcl_setting_check_libraries_subtitle">This option forces launcher to check the library hash if it\'s available. Prevents broken downloads.</string>
     <string name="dl_library_sha_fail">Library %s is damaged and will be redownloaded</string>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.*;
 import android.os.Vibrator;
 import android.util.Log;
@@ -20,6 +21,7 @@ import net.kdt.pojavlaunch.prefs.*;
 import net.kdt.pojavlaunch.utils.*;
 import org.lwjgl.glfw.*;
 
+import static net.kdt.pojavlaunch.Tools.getFileName;
 import static net.kdt.pojavlaunch.utils.MathUtils.map;
 
 import androidx.preference.PreferenceManager;
@@ -27,7 +29,6 @@ import androidx.preference.PreferenceManager;
 import com.kdt.LoggerView;
 
 public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTouchListener {
-    private static final int MSG_LEFT_MOUSE_BUTTON_CHECK = 1028;
     
     private AWTCanvasView mTextureView;
     private int totalMovement;
@@ -222,7 +223,9 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 
             placeMouseAt(CallbackBridge.physicalWidth / 2, CallbackBridge.physicalHeight / 2);
 
-            final File miniclient = (File) getIntent().getExtras().getSerializable("miniclient");
+
+            Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.miniclient);
+            final File miniclient = new File(getCacheDir(), getFileName(this, uri));
             final File config = new File(getFilesDir(), "config.json");
             final String javaArgs = getIntent().getExtras().getString("javaArgs");
 
@@ -249,7 +252,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             });
             new Thread(() -> {
                 try {
-                    launchJavaRuntime(miniclient, javaArgs,config);
+                    launchJavaRuntime(miniclient, javaArgs, config);
                 } catch (Throwable e) {
                     Tools.showError(JavaGUILauncherActivity.this, e);
                 }

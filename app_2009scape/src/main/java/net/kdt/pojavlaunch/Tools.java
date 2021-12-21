@@ -326,15 +326,6 @@ public final class Tools {
             from.renameTo(toFrom);
         }
     }
-
-    public static void openURL(Activity act, String url) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        act.startActivity(browserIntent);
-    }
-    
-    public static String convertStream(InputStream inputStream) throws IOException {
-        return convertStream(inputStream, Charset.forName("UTF-8"));
-    }
     
     public static String convertStream(InputStream inputStream, Charset charset) throws IOException {
         String out = "";
@@ -414,26 +405,6 @@ public final class Tools {
         return buffer;
     }
 
-    public static void downloadFile(String urlInput, String nameOutput) throws IOException {
-        File file = new File(nameOutput);
-        DownloadUtils.downloadFile(urlInput, file);
-    }
-    public static boolean compareSHA1(File f, String sourceSHA) {
-        try {
-            String sha1_dst;
-            try (InputStream is = new FileInputStream(f)) {
-                 sha1_dst = new String(Hex.encodeHex(org.apache.commons.codec.digest.DigestUtils.sha1(is)));
-            }
-            if(sha1_dst != null && sourceSHA != null) {
-                return sha1_dst.equalsIgnoreCase(sourceSHA);
-            } else{
-                return true; // fake match
-            }
-        }catch (IOException e) {
-            Log.i("SHA1","Fake-matching a hash due to a read error",e);
-            return true;
-        }
-    }
     public static class ZipTool
     {
         private ZipTool(){}
@@ -504,18 +475,6 @@ public final class Tools {
         }
     }
 
-    public static void ignoreNotch(boolean shouldIgnore, Activity ctx){
-        if (SDK_INT >= P) {
-            if (shouldIgnore) {
-                ctx.getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            } else {
-                ctx.getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER;
-            }
-            ctx.getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN, WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-            Tools.updateWindowSize(ctx);
-        }
-    }
-
     public static int getTotalDeviceMemory(Context ctx){
         ActivityManager actManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
@@ -528,12 +487,6 @@ public final class Tools {
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         actManager.getMemoryInfo(memInfo);
         return (int) (memInfo.availMem / 1048576L);
-    }
-
-    public static int getDisplayFriendlyRes(int displaySideRes, float scaling){
-        displaySideRes *= scaling;
-        if(displaySideRes % 2 != 0) displaySideRes ++;
-        return displaySideRes;
     }
 
     public static String getFileName(Context ctx, Uri uri) {

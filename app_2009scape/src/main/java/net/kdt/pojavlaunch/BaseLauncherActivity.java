@@ -4,33 +4,12 @@ import static net.kdt.pojavlaunch.Tools.getFileName;
 
 import android.app.*;
 import android.content.*;
-import android.net.Uri;
 import android.view.*;
-import android.widget.*;
 
 import androidx.annotation.Nullable;
 
-import java.io.*;
-
-import net.kdt.pojavlaunch.multirt.MultiRTUtils;
-import net.kdt.pojavlaunch.prefs.*;
-
-import org.apache.commons.io.IOUtils;
-
 public abstract class BaseLauncherActivity extends BaseActivity {
-	public Button mPlayButton;
-    public ProgressBar mLaunchProgress;
-	public Spinner mVersionSelector;
-	public TextView mLaunchTextStatus;
-
-	public String[] mAvailableVersions;
-    
-	public boolean mIsAssetsProcessing = false;
     protected boolean canBack = false;
-    
-    public abstract void statusIsLaunching(boolean isLaunching);
-
-
 
     /**
      * Used by the install button from the layout_main_v4
@@ -39,18 +18,6 @@ public abstract class BaseLauncherActivity extends BaseActivity {
 
 
     public static final int RUN_MOD_INSTALLER = 2050;
-
-    public void launchGame(View v) {
-        if (!canBack && mIsAssetsProcessing) {
-            mIsAssetsProcessing = false;
-            statusIsLaunching(false);
-        } else if (canBack) {
-            v.setEnabled(false);
-            //mTask = new MinecraftDownloaderTask(this);
-            //mTask.execute(mProfile.selectedVersion);
-
-        }
-    }
     
     @Override
     public void onBackPressed() {
@@ -77,68 +44,26 @@ public abstract class BaseLauncherActivity extends BaseActivity {
         System.out.println("call to onResume; E");
     }
 
-    SharedPreferences.OnSharedPreferenceChangeListener listRefreshListener = null;
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
-        if(listRefreshListener == null) {
-            final BaseLauncherActivity thiz = this;
-            listRefreshListener = (sharedPreferences, key) -> {
-                if(key.startsWith("vertype_")) {
-                    System.out.println("Verlist update needed!");
-                }
-            };
-        }
-        LauncherPreferences.DEFAULT_PREF.registerOnSharedPreferenceChangeListener(listRefreshListener);
-        System.out.println("call to onResumeFragments");
-
-        //TODO ADD CRASH CHECK AND FOCUS
-        System.out.println("call to onResumeFragments; E");
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
+        System.out.println(resultCode);
         if(resultCode == Activity.RESULT_OK) {
-            final ProgressDialog barrier = new ProgressDialog(this);
-            barrier.setMessage(getString(R.string.global_waiting));
-            barrier.setProgressStyle(barrier.STYLE_SPINNER);
-            barrier.setCancelable(false);
-            barrier.show();
-
-            // Run a mod installer
             if (requestCode == RUN_MOD_INSTALLER) {
                 if (data == null) return;
-
-                //final Uri uri = data.getData();
-                Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.miniclient);
-                String path = uri.getPath();
-                //File modFile = new File(new URI(path));
-
-
-                barrier.setMessage(BaseLauncherActivity.this.getString(R.string.multirt_progress_caching));
                 Thread t = new Thread(()->{
-                    try {
-                        final String name = getFileName(this, uri);
-                        final File modInstallerFile = new File(getCacheDir(), name);
-                        FileOutputStream fos = new FileOutputStream(modInstallerFile);
-                        IOUtils.copy(getContentResolver().openInputStream(uri), fos);
-                        fos.close();
-                        BaseLauncherActivity.this.runOnUiThread(() -> {
-                            barrier.dismiss();
-                            Intent intent = new Intent(BaseLauncherActivity.this, JavaGUILauncherActivity.class);
-                            intent.putExtra("modFile", modInstallerFile);
-                            startActivity(intent);
-                        });
-                    }catch(IOException e) {
-                        Tools.showError(BaseLauncherActivity.this,e);
-                    }
+                    BaseLauncherActivity.this.runOnUiThread(() -> {
+                        Intent intent = new Intent(BaseLauncherActivity.this, JavaGUILauncherActivity.class);
+                        startActivity(intent);
+                    });
                 });
                 t.start();
             }
-
         }
     }
-
-    protected abstract void initTabs(int pageIndex);
 }

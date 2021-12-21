@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -41,9 +40,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class PojavLoginActivity extends BaseActivity
-// MineActivity
-{
+public class PojavLoginActivity extends BaseActivity {
     private final Object mLockStoragePerm = new Object();
     private final Object mLockSelectJRE = new Object();
     
@@ -68,7 +65,8 @@ public class PojavLoginActivity extends BaseActivity
         Tools.updateWindowSize(this);
         firstLaunchPrefs = getSharedPreferences("pojav_extract", MODE_PRIVATE);
         new Thread(new InitRunnable()).start();
-        System.out.println("I got to loginactivity again");
+        // If we get here that's because the client was closed.
+        finish();
     }
 
     @Override
@@ -146,24 +144,14 @@ public class PojavLoginActivity extends BaseActivity
     }
     private void uiInit() {
         setContentView(R.layout.launcher_main_v4);
-        final ProgressDialog barrier = new ProgressDialog(this);
-        barrier.setMessage(getString(R.string.global_waiting));
-        barrier.setProgressStyle(barrier.STYLE_SPINNER);
-        barrier.setCancelable(false);
-        barrier.show();
-
         Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.miniclient);
-
-        barrier.setMessage(PojavLoginActivity.this.getString(R.string.multirt_progress_caching));
         Thread t = new Thread(()->{
             try {
-                final String name = getFileName(this, uri);
-                final File miniclient = new File(getCacheDir(), name);
+                final File miniclient = new File(getCacheDir(), getFileName(this, uri));
                 FileOutputStream fos = new FileOutputStream(miniclient);
                 IOUtils.copy(getContentResolver().openInputStream(uri), fos);
                 fos.close();
                 PojavLoginActivity.this.runOnUiThread(() -> {
-                    barrier.dismiss();
                     Intent intent = new Intent(PojavLoginActivity.this, JavaGUILauncherActivity.class);
                     intent.putExtra("miniclient", miniclient);
                     startActivity(intent);
