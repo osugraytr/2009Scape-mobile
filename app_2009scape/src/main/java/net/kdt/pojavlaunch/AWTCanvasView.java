@@ -17,6 +17,7 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
     public int offsetY = 0;
     private float[] stretchOffsets;
     private float[] stretchScales;
+    private boolean streched = false;
 
     private int mWidth, mHeight;
     private boolean mIsDestroyed = false;
@@ -56,8 +57,7 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
     void initScaleFactors(float forcedScale){
         //Could be optimized
         if(forcedScale < 1) { //Auto scale
-            int minDimension = Math.min(CallbackBridge.physicalHeight, CallbackBridge.physicalWidth);
-            mScaleFactor = 2;
+            mScaleFactor = 2.166F;
         }else{
             mScaleFactor = forcedScale;
         }
@@ -71,31 +71,6 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
         scales[1] -= scales[1]/mScaleFactor;
 
         mScales = scales;
-    }
-
-    void initStretchedModes(){
-
-        float[] offsets = new float[2];
-        float[] scales = new float[4];
-        // Full screen stretched
-        offsets[0] -= mScales[0]*1.33F;
-        offsets[1] -= mScales[1]*1.02F;
-
-        // 16:9 Stretched
-
-
-
-        // Fullscreen stretched
-        scales[0] = (CallbackBridge.physicalWidth/2)/765;
-        scales[1] = (CallbackBridge.physicalHeight/2)/503;
-
-        // 16:9 stretched
-        scales[2] = (CallbackBridge.physicalWidth/2)/894.22F;
-        scales[3] = (CallbackBridge.physicalHeight/2)/503;
-
-        stretchScales = scales;
-        stretchOffsets = offsets;
-
     }
     
     public AWTCanvasView(Context ctx) {
@@ -112,14 +87,12 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
         
         setSurfaceTextureListener(this);
         initScaleFactors();
-        initStretchedModes();
     }
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture texture, int w, int h) {
         mWidth = w;
         mHeight = h;
-        
         mIsDestroyed = false;
         new Thread(this, "AndroidAWTRenderer").start();
     }
@@ -158,19 +131,16 @@ public class AWTCanvasView extends TextureView implements TextureView.SurfaceTex
                     int[] rgbArray = JREUtils.renderAWTScreenFrame(/* canvas, mWidth, mHeight */);
                     mDrawing = rgbArray != null;
                     if (rgbArray != null) {
-
-
                         canvas.save();
-                        // 16:9~ Scaled
-                        //System.out.println("Factor: "+mScaleFactor);
-                        //canvas.scale(mScaleFactor*1.17F, mScaleFactor);
-                        //canvas.translate(-mScales[0]*1.17F,-mScales[1]);
-                        //
-                        canvas.scale(mScaleFactor, mScaleFactor);
-                        canvas.translate(-mScales[0],-mScales[1]);
+                        if(streched){
+                            canvas.scale(mScaleFactor*1.17F, mScaleFactor);
+                            canvas.translate(-mScales[0]*1.115F,-mScales[1]);
+                        } else {
+                            canvas.scale(mScaleFactor, mScaleFactor);
+                            canvas.translate(-mScales[0],-mScales[1]);
+                        }
                         canvas.drawBitmap(rgbArray, 0, CallbackBridge.physicalWidth, offsetX, offsetY, CallbackBridge.physicalWidth, CallbackBridge.physicalHeight, true, null);
                         canvas.restore();
-
                     }
                 }
                 canvas.drawText("FPS: " + (Math.round(fps() * 10) / 10) + ", attached=" + attached + ", drawing=" + mDrawing, 50, 50, fpsPaint);

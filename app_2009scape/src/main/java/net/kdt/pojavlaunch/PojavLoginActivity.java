@@ -204,32 +204,12 @@ public class PojavLoginActivity extends BaseActivity {
         }
     }
     private void initMain() throws Throwable {
-        // Copy config.json to writable storage
-        // https://stackoverflow.com/questions/38590996/copy-xml-from-raw-folder-to-internal-storage-and-use-it-in-android
-        File file = new File(getFilesDir(), "config.json");
-        try {
-            Context context = getApplicationContext();
-            InputStream inputStream = context.getResources().openRawResource(R.raw.config);
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            byte buf[]=new byte[1024];
-            int len;
-            while((len=inputStream.read(buf))>0) {
-                fileOutputStream.write(buf,0,len);
-            }
-            fileOutputStream.close();
-            inputStream.close();
-            System.out.println("Write to Local");
-        } catch (IOException e1) {}
-
         mkdirs(Tools.DIR_ACCOUNT_NEW);
         mkdirs(Tools.DIR_GAME_HOME);
         mkdirs(Tools.DIR_GAME_HOME + "/lwjgl3");
         mkdirs(Tools.DIR_GAME_HOME + "/config");
         mkdirs(Tools.CTRLMAP_PATH);
-
-
         try {
-
             Tools.copyAssetFile(this, "components/security/pro-grade.jar", Tools.DIR_DATA, true);
             Tools.copyAssetFile(this, "components/security/java_sandbox.policy", Tools.DIR_DATA, true);
             Tools.copyAssetFile(this, "options.txt", Tools.DIR_GAME_NEW, false);
@@ -267,6 +247,23 @@ public class PojavLoginActivity extends BaseActivity {
                 MultiRTUtils.installRuntimeNamedBinpack(am.open("components/jre/universal.tar.xz"), am.open("components/jre/bin-" + archAsString(Tools.DEVICE_ARCHITECTURE) + ".tar.xz"), "Internal", rt_version,
                         (resid, vararg) -> runOnUiThread(()->{if(startupTextView!=null)startupTextView.setText(getString(resid,vararg));}));
                 MultiRTUtils.postPrepare(PojavLoginActivity.this,"Internal");
+
+                // Copy config.json to writable storage
+                // https://stackoverflow.com/questions/38590996/copy-xml-from-raw-folder-to-internal-storage-and-use-it-in-android
+                File file = new File(getFilesDir(), "config.json");
+                try {
+                    Context context = getApplicationContext();
+                    InputStream inputStream = context.getResources().openRawResource(R.raw.config);
+                    FileOutputStream fileOutputStream = new FileOutputStream(file);
+                    byte buf[]=new byte[1024];
+                    int len;
+                    while((len=inputStream.read(buf))>0) {
+                        fileOutputStream.write(buf,0,len);
+                    }
+                    fileOutputStream.close();
+                    inputStream.close();
+                    System.out.println("Write to Local");
+                } catch (IOException e1) {}
                 return true;
             }catch (IOException e) {
                 Log.e("JREAuto", "Internal JRE unpack failed", e);

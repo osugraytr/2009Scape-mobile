@@ -51,7 +51,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
     private boolean isVirtualMouseEnabled;
 
-    private int scaleFactor;
+    private float scaleFactor;
     public float[] scaleFactors = initScaleFactors();
 
     private final int fingerStillThreshold = 8;
@@ -415,8 +415,17 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     }
 
     void sendScaledMousePosition(float x, float y){
-        AWTInputBridge.sendMousePos((int) map(x,0,CallbackBridge.physicalWidth, scaleFactors[0], scaleFactors[2]),
-                (int) map(y,0,CallbackBridge.physicalHeight, scaleFactors[1], scaleFactors[3]));
+        AWTInputBridge.sendMousePos(
+                (int) map(x,0,CallbackBridge.physicalWidth, scaleFactors[0], scaleFactors[2]),
+                (int) map(y,0,CallbackBridge.physicalHeight, scaleFactors[1], scaleFactors[3])
+        );
+    }
+
+    void sendScaledMousePositionStretch(float x, float y){
+        AWTInputBridge.sendMousePos(
+                (int) map(x,0,CallbackBridge.physicalWidth, scaleFactors[0]*1.17F, scaleFactors[2]*1.17F),
+                (int) map(y,0,CallbackBridge.physicalHeight, scaleFactors[1], scaleFactors[3])
+        );
     }
 
     public void toggleVirtualMouse(View v) {
@@ -491,8 +500,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         //Could be optimized
 
         if(autoScale) { //Auto scale
-            int minDimension = Math.min(CallbackBridge.physicalHeight, CallbackBridge.physicalWidth);
-            scaleFactor = Math.max(((3 * minDimension) / 1080) - 1, 1);
+            scaleFactor = 2.166F;
         }
 
         float[] scales = new float[4]; //Left, Top, Right, Bottom
@@ -513,14 +521,14 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     }
 
     public void scaleDown(View view) {
-        scaleFactor = Math.max(scaleFactor - 1, 1);
+        scaleFactor = Math.max(scaleFactor - .2F, 1);
         scaleFactors = initScaleFactors(false);
         mTextureView.initScaleFactors(scaleFactor);
         sendScaledMousePosition(mousePointer.getX(),mousePointer.getY());
     }
 
     public void scaleUp(View view) {
-        scaleFactor = Math.min(scaleFactor + 1, 6);
+        scaleFactor = Math.min(scaleFactor + .2F, 6);
         scaleFactors = initScaleFactors(false);
         mTextureView.initScaleFactors(scaleFactor);
         sendScaledMousePosition(mousePointer.getX(),mousePointer.getY());
