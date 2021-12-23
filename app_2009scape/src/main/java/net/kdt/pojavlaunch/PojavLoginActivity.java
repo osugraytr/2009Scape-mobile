@@ -66,7 +66,8 @@ public class PojavLoginActivity extends BaseActivity {
         firstLaunchPrefs = getSharedPreferences("pojav_extract", MODE_PRIVATE);
         new Thread(new InitRunnable()).start();
         // If we get here that's because the client was closed.
-        finish();
+        // having this here causes the app to close its activity when installing jdk.
+        //finish();
     }
 
     @Override
