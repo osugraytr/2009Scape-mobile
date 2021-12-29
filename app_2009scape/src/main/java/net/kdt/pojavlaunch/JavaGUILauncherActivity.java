@@ -105,7 +105,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 lp.addRule(RelativeLayout.ALIGN_PARENT_END);
                 RelativeLayout.LayoutParams lp1 = (RelativeLayout.LayoutParams) findViewById(R.id.mb2).getLayoutParams();
                 lp1.addRule(RelativeLayout.LEFT_OF,R.id.keyboard);
-                lp1.addRule(RelativeLayout.RIGHT_OF); // Clear right of prop
+                lp1.addRule(RelativeLayout.RIGHT_OF,0); // Clear right_of prop
                 RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) findViewById(R.id.main_toggle_mouse).getLayoutParams();
                 lp2.addRule(RelativeLayout.LEFT_OF,R.id.keyboard);
                 RelativeLayout.LayoutParams lp3 = (RelativeLayout.LayoutParams) findViewById(R.id.installmod_scale_down).getLayoutParams();
@@ -148,7 +148,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                     public boolean onTouch(View v, MotionEvent event) {
                         int action = event.getActionMasked();
 
-                        if(action == 0){
+                        if(action == KeyEvent.ACTION_DOWN){
                             // Reset checks because this is a new tap
                             longPressTriggered = false;
                             totalMovement = 0;
@@ -169,12 +169,13 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                         }
 
                         // Long press
-                        totalMovement += Math.abs(x - prevX) + Math.abs(y - prevX);
+                        totalMovement += Math.abs(x - prevX) + Math.abs(y - prevY);
                         if(!longPressTriggered &&
                             System.currentTimeMillis() - touchStart > 1500 &&
-                            totalMovement < 8000
+                            totalMovement < 5
                         ){
                             longPressTriggered = true;
+                            Log.i("Longpress: ",""+totalMovement);
                             AWTInputBridge.sendKey((char)118,118);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 vb.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -302,6 +303,19 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if(event.getAction() == KeyEvent.ACTION_DOWN){
+            /*
+
+            About Key Events. Because the Android Spec doesn't require
+            soft keyboards to dispatch key events not all keyboard implementations
+            across Android will trigger these actions.
+
+            Currently we use the following function to translate keycodes for
+            special character, capital letters, and digits.
+
+            keycode 123 (F12) is used as a single digit capslock button which
+            when sent to the miniclient before a char will act accordingly.
+
+             */
             if(event.getKeyCode() == 67){
                 // Backspace
                 AWTInputBridge.sendKey((char)0x08,0x08);
@@ -370,7 +384,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                         c = '\\';
                         break;
                 }
-                //System.out.println("I SEE A "+(char)event.getUnicodeChar());
                 if(c != (char)event.getUnicodeChar()){
                     System.out.println("REPLACED with "+(char)c);
                     AWTInputBridge.sendKey((char)123,123);
@@ -378,14 +391,12 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 AWTInputBridge.sendKey((char)c,c);
 
             } else if(Character.isDigit((char)event.getUnicodeChar())){
-                System.out.println("I SEE A "+(char)event.getUnicodeChar());
                 AWTInputBridge.sendKey((char)event.getUnicodeChar(),(char)event.getUnicodeChar());
             } else if ((char)event.getUnicodeChar() == Character.toUpperCase((char)event.getUnicodeChar())){
-                // We send a '`' (keycode) 192 to avoid needing to worry about shift. The RS client takes this modifier
-                // and does a toUpperCase(). Special character mapping will also need to be provided.
+                // We send F12 (keycode 123) to avoid needing to worry about shift. The RS client takes this modifier
+                // and does a toUpperCase().
                 AWTInputBridge.sendKey((char)123,123);
                 AWTInputBridge.sendKey((char)Character.toUpperCase(event.getUnicodeChar()),(char)Character.toUpperCase(event.getUnicodeChar()));
-
                 // Send shift key.. only problem is then you're stuck shifted.
                 // AWTInputBridge.sendKey((char)0x10,(char)Character.toUpperCase(event.getUnicodeChar()),0,0x10);
             } else if((char)event.getUnicodeChar() == Character.toLowerCase((char)event.getUnicodeChar())){

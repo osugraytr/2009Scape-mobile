@@ -52,12 +52,7 @@ public class SettingsMenu extends Activity {
         switch (requestCode) {
             case FILE_SELECT_CODE:
                 if (resultCode == RESULT_OK) {
-                    // Get the Uri of the selected file
                     Uri uri = data.getData();
-                    Log.d("TAG", "File Uri: " + uri.toString());
-                    // Get the path
-                    Log.d("TAG", "File Path: " + uri.getPath());
-                    // Get the file instance
                     File config = new File(getFilesDir(), "config.json");
                     try {
                         Log.d("TAG", "Starting copy: " + uri.getPath());
@@ -70,7 +65,8 @@ public class SettingsMenu extends Activity {
                         }
                         fileOutputStream.close();
                         inputStream.close();
-                        System.out.println("Wrote new config to Local");
+                        Toast.makeText(this, "Config loaded. Please restart the app.",
+                                Toast.LENGTH_SHORT).show();
                     } catch (IOException e1) {
                         Log.d("error", "Error with file " + e1);
                     }
@@ -141,14 +137,14 @@ public class SettingsMenu extends Activity {
             return false;
         });
 
-        righthanded.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // do something, the isChecked will be
-                // true if the switch is in the On position
-                System.out.println(isChecked);
-                editor.putString("righthanded",""+isChecked);
-                editor.commit();
-            }
+        righthanded.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // do something, the isChecked will be
+            // true if the switch is in the On position
+            System.out.println(isChecked);
+            editor.putString("righthanded",""+isChecked);
+            editor.commit();
+            Toast.makeText(this, "Relaunch required to update GUI.",
+                    Toast.LENGTH_SHORT).show();
         });
 
     }
