@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +16,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
+
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,33 +55,32 @@ public class SettingsMenu extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case FILE_SELECT_CODE:
-                if (resultCode == RESULT_OK) {
-                    Uri uri = data.getData();
-                    File config = new File(getFilesDir(), "config.json");
-                    try {
-                        Log.d("TAG", "Starting copy: " + uri.getPath());
-                        InputStream inputStream = getContentResolver().openInputStream(uri);
-                        FileOutputStream fileOutputStream = new FileOutputStream(config);
-                        byte buf[]=new byte[1024];
-                        int len;
-                        while((len=inputStream.read(buf))>0) {
-                            fileOutputStream.write(buf,0,len);
-                        }
-                        fileOutputStream.close();
-                        inputStream.close();
-                        Toast.makeText(this, "Config loaded. Please restart the app.",
-                                Toast.LENGTH_SHORT).show();
-                    } catch (IOException e1) {
-                        Log.d("error", "Error with file " + e1);
+        if (requestCode == FILE_SELECT_CODE) {
+            if (resultCode == RESULT_OK) {
+                Uri uri = data.getData();
+                File config = new File(getFilesDir(), "config.json");
+                try {
+                    Log.d("TAG", "Starting copy: " + uri.getPath());
+                    InputStream inputStream = getContentResolver().openInputStream(uri);
+                    FileOutputStream fileOutputStream = new FileOutputStream(config);
+                    byte buf[] = new byte[1024];
+                    int len;
+                    while ((len = inputStream.read(buf)) > 0) {
+                        fileOutputStream.write(buf, 0, len);
                     }
+                    fileOutputStream.close();
+                    inputStream.close();
+                    Toast.makeText(this, "Config loaded. Please restart the app.",
+                            Toast.LENGTH_SHORT).show();
+                } catch (IOException e1) {
+                    Log.d("error", "Error with file " + e1);
                 }
-                break;
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,25 +93,17 @@ public class SettingsMenu extends Activity {
 
         final EditText username = findViewById(R.id.username);
         final EditText password = findViewById(R.id.password);
-        final Switch righthanded = findViewById(R.id.righthanded);
+        final SwitchMaterial righthanded = findViewById(R.id.righthanded);
+        final SeekBar mouseSpeed = findViewById(R.id.mouseslider);
         final Button loadConfig = findViewById(R.id.loadconfig);
 
-        loadConfig.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.i("Pressed","Button");
-                        showFileChooser();
-                        return true; // if you want to handle the touch event
-                    case MotionEvent.ACTION_UP:
-                        // RELEASED
-                        return true; // if you want to handle the touch event
-                }
-                return false;
+        loadConfig.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                showFileChooser();
+                return true; // if you want to handle the touch event
             }
+            return false;
         });
-
 
         //For storing string value in sharedPreference
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -115,8 +112,8 @@ public class SettingsMenu extends Activity {
         // Restore from saved values
         username.setText(preferences.getString("username",""));
         password.setText(preferences.getString("password",""));
-        righthanded.setChecked(Boolean.parseBoolean(preferences.getString("righthanded","")));
-
+        mouseSpeed.setProgress((int)LauncherPreferences.PREF_MOUSESPEED);
+        righthanded.setChecked(Boolean.parseBoolean(preferences.getString("righthanded","false")));
 
         username.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -137,10 +134,25 @@ public class SettingsMenu extends Activity {
             return false;
         });
 
+        mouseSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                editor.putInt("mousespeed",mouseSpeed.getProgress());
+                editor.commit();
+                LauncherPreferences.PREF_MOUSESPEED = mouseSpeed.getProgress();
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
         righthanded.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // do something, the isChecked will be
-            // true if the switch is in the On position
-            System.out.println(isChecked);
             editor.putString("righthanded",""+isChecked);
             editor.commit();
             Toast.makeText(this, "Relaunch required to update GUI.",

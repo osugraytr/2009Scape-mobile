@@ -44,7 +44,7 @@ public class LauncherPreferences
 
 		PREF_BUTTONSIZE = DEFAULT_PREF.getInt("buttonscale", 100);
 		PREF_MOUSESCALE = DEFAULT_PREF.getInt("mousescale", 100);
-		PREF_MOUSESPEED = ((float)DEFAULT_PREF.getInt("mousespeed",100))/100f;
+		PREF_MOUSESPEED = ((float)DEFAULT_PREF.getInt("mousespeed",1));
 		PREF_HIDE_SIDEBAR = DEFAULT_PREF.getBoolean("hideSidebar", false);
 		PREF_IGNORE_NOTCH = DEFAULT_PREF.getBoolean("ignoreNotch", false);
 		PREF_VERTYPE_RELEASE = DEFAULT_PREF.getBoolean("vertype_release", true);
@@ -65,33 +65,6 @@ public class LauncherPreferences
         PREF_SUSTAINED_PERFORMANCE = DEFAULT_PREF.getBoolean("sustainedPerformance", false);
         PREF_GLES_SHRINK_HACK = DEFAULT_PREF.getString("gl4es_shrink_hack", "0");
 
-/*
-        if (PREF_CUSTOM_JAVA_ARGS.isEmpty()) {
-            String DEFAULT_JAVA_ARGS = "";
-                "-Xms" + (androidHeap > 800 ? 800 : androidHeap) + "m " +
-                // (32bit) More than 800mb may make JVM not allocateable and crash
-                "-Xmx" + (doubleAndroidHeap > 800 ? 800 : doubleAndroidHeap) + "m" +
-                "-XX:+UseG1GC " +
-                "-XX:+ParallelRefProcEnabled " +
-                "-XX:MaxGCPauseMillis=200 " +
-                "-XX:+UnlockExperimentalVMOptions " +
-                "-XX:+AlwaysPreTouch " +
-		"-XX:G1NewSizePercent=30 " +
-		"-XX:G1MaxNewSizePercent=40 " +
-		"-XX:G1HeapRegionSize=8M " +
-		"-XX:G1ReservePercent=20 " +
-		"-XX:G1HeapWastePercent=5 " +
-	        "-XX:G1MixedGCCountTarget=4 " +
-		"-XX:InitiatingHeapOccupancyPercent=15 " +
-		"-XX:G1MixedGCLiveThresholdPercent=90 " +
-		"-XX:G1RSetUpdatingPauseTimePercent=5 " +
-		"-XX:SurvivorRatio=32 " +
-		"-XX:+PerfDisableSharedMem " +
-                "-XX:MaxTenuringThreshold=1";
-            PREF_CUSTOM_JAVA_ARGS = DEFAULT_JAVA_ARGS;
-            DEFAULT_PREF.edit().putString("javaArgs", DEFAULT_JAVA_ARGS).commit();
-        }
-*/
 
         if (PREF_RENDERER.equals("2") || PREF_RENDERER.equals("3")) {
             PREF_RENDERER = "opengles" + PREF_RENDERER;

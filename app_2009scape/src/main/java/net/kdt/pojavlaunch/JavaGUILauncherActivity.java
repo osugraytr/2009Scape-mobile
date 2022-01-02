@@ -21,6 +21,7 @@ import net.kdt.pojavlaunch.prefs.*;
 import net.kdt.pojavlaunch.utils.*;
 import org.lwjgl.glfw.*;
 
+import static net.kdt.pojavlaunch.Tools.currentDisplayMetrics;
 import static net.kdt.pojavlaunch.Tools.getFileName;
 import static net.kdt.pojavlaunch.utils.MathUtils.map;
 
@@ -34,7 +35,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     private int totalMovement;
 
     String specialChars = "/*!@#$%^&*()\"{}_[+:;=-_]'|\\?/<>,.";
-    private LoggerView loggerView;
     private boolean mouseState = false;
 
     private LinearLayout touchPad;
@@ -42,10 +42,8 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     private GestureDetector gestureDetector;
     private long lastPress = 0;
     ScaleGestureDetector scaleGestureDetector;
-    GestureDetector longTapGestureDetector;
     private long touchStart = 0;
     boolean longPressTriggered = false;
-    boolean longPressShouldClick = false;
 
     private boolean rcState = false;
 
@@ -53,10 +51,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
     private float scaleFactor;
     public float[] scaleFactors = initScaleFactors();
-
-    private final int fingerStillThreshold = 8;
-    private int initialX;
-    private int initialY;
 
     public class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
@@ -66,7 +60,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             if (scaleFactor > 1) { //Send F4 To Zoom Out
                 AWTInputBridge.sendKey((char)115,115);
             } else { //116 F5 To Zoom In
-                AWTInputBridge.sendKey((char) 116, 116);
+                AWTInputBridge.sendKey((char)116, 116);
             }
             return true;
         }
@@ -209,8 +203,9 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                                 case MotionEvent.ACTION_POINTER_UP: // 6
                                     break;
                                 case MotionEvent.ACTION_MOVE: // 2
-                                    mouseX = Math.max(0, Math.min(CallbackBridge.physicalWidth, mouseX + x - prevX));
-                                    mouseY = Math.max(0, Math.min(CallbackBridge.physicalHeight, mouseY + y - prevY));
+                                    System.out.println("DEBUG: MOUSESPEED"+LauncherPreferences.PREF_MOUSESPEED);
+                                    mouseX = Math.max(0, Math.min(currentDisplayMetrics.widthPixels, mouseX + (x - prevX) * LauncherPreferences.PREF_MOUSESPEED));
+                                    mouseY = Math.max(0, Math.min(currentDisplayMetrics.heightPixels, mouseY + (y - prevY) * LauncherPreferences.PREF_MOUSESPEED));
                                     placeMouseAt(mouseX, mouseY);
                                     sendScaledMousePosition(mouseX,mouseY);
                                     break;

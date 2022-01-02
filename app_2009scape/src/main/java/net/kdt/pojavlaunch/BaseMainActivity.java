@@ -39,14 +39,6 @@ public class BaseMainActivity extends BaseActivity {
         decorView.setSystemUiVisibility(uiOptions);
     }
 
-    @Override
-    protected void onPause() {
-        if (CallbackBridge.isGrabbing()){
-            sendKeyPress(LWJGLGLFWKeycode.GLFW_KEY_ESCAPE);
-        }
-        super.onPause();
-    }
-
     public static void fullyExit() {
         android.os.Process.killProcess(android.os.Process.myPid());
     }

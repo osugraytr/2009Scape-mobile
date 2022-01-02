@@ -45,16 +45,39 @@
             app:layout_constraintTop_toBottomOf="@+id/username"
             tools:layout_editor_absoluteX="-1dp" />
 
-        <Switch
+        <TextView
+            android:id="@+id/mousespeed_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="Mouse Speed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/password" />
+
+        <SeekBar
+            android:id="@+id/mouseslider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:max="10"
+            android:min="1"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="35dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mousespeed_text" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/righthanded"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="16dp"
             android:text="Right Handed Mode"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            app:layout_constraintTop_toBottomOf="@+id/mouseslider" />
 
         <Button
             android:id="@+id/loadconfig"
