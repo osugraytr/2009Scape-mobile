@@ -34,7 +34,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     private AWTCanvasView mTextureView;
     private int totalMovement;
 
-    String specialChars = "/*!@#$%^&*()\"{}_[+:;=-_]'|\\?/<>,.";
+
     private boolean mouseState = false;
 
     private LinearLayout touchPad;
@@ -203,7 +203,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                                 case MotionEvent.ACTION_POINTER_UP: // 6
                                     break;
                                 case MotionEvent.ACTION_MOVE: // 2
-                                    System.out.println("DEBUG: MOUSESPEED"+LauncherPreferences.PREF_MOUSESPEED);
+                                    // System.out.println("DEBUG: MOUSESPEED"+LauncherPreferences.PREF_MOUSESPEED);
                                     mouseX = Math.max(0, Math.min(currentDisplayMetrics.widthPixels, mouseX + (x - prevX) * LauncherPreferences.PREF_MOUSESPEED));
                                     mouseY = Math.max(0, Math.min(currentDisplayMetrics.heightPixels, mouseY + (y - prevY) * LauncherPreferences.PREF_MOUSESPEED));
                                     placeMouseAt(mouseX, mouseY);
@@ -269,10 +269,10 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                     break;
                 case R.id.mb2:
                     if (!rcState) {
-                        System.out.println("Sending F11");
+                        // Send F11 to activate RightClick
                         activateRC();
                     } else {
-                        System.out.println("Sending F10");
+                        // Send F10 to clear RightClick
                         clearRC();
                     }
                     System.out.println("Time:" + time + " Last " + lastPress);
@@ -298,107 +298,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if(event.getAction() == KeyEvent.ACTION_DOWN){
-            /*
-
-            About Key Events. Because the Android Spec doesn't require
-            soft keyboards to dispatch key events not all keyboard implementations
-            across Android will trigger these actions.
-
-            Currently we use the following function to translate keycodes for
-            special character, capital letters, and digits.
-
-            keycode 123 (F12) is used as a single digit capslock button which
-            when sent to the miniclient before a char will act accordingly.
-
-             */
-            if(event.getKeyCode() == 67){
-                // Backspace
-                AWTInputBridge.sendKey((char)0x08,0x08);
-            } else if(specialChars.contains(""+(char)event.getUnicodeChar())){
-                // Send special character to client
-                char c = (char)event.getUnicodeChar();
-                switch(c){
-                    case '!':
-                        c = '1';
-                        break;
-                    case '@':
-                        c = '2';
-                        break;
-                    case '#':
-                        c = '3';
-                        break;
-                    case '$':
-                        c = '4';
-                        break;
-                    case '%':
-                        c = '5';
-                        break;
-                    case '^':
-                        c = '6';
-                        break;
-                    case '&':
-                        c = '7';
-                        break;
-                    case '*':
-                        c = '8';
-                        break;
-                    case '(':
-                        c = '9';
-                        break;
-                    case ')':
-                        c = '0';
-                        break;
-                    case '_':
-                        c = '-';
-                        break;
-                    case '+':
-                        c = '=';
-                        break;
-                    case '{':
-                        c = '[';
-                        break;
-                    case '}':
-                        c = ']';
-                        break;
-                    case ':':
-                        c = ';';
-                        break;
-                    case '"':
-                        c = '\'';
-                        break;
-                    case '<':
-                        c = ',';
-                        break;
-                    case '>':
-                        c = '.';
-                        break;
-                    case '?':
-                        c = '/';
-                        break;
-                    case '|':
-                        c = '\\';
-                        break;
-                }
-                if(c != (char)event.getUnicodeChar()){
-                    System.out.println("REPLACED with "+(char)c);
-                    AWTInputBridge.sendKey((char)123,123);
-                }
-                AWTInputBridge.sendKey((char)c,c);
-
-            } else if(Character.isDigit((char)event.getUnicodeChar())){
-                AWTInputBridge.sendKey((char)event.getUnicodeChar(),(char)event.getUnicodeChar());
-            } else if ((char)event.getUnicodeChar() == Character.toUpperCase((char)event.getUnicodeChar())){
-                // We send F12 (keycode 123) to avoid needing to worry about shift. The RS client takes this modifier
-                // and does a toUpperCase().
-                AWTInputBridge.sendKey((char)123,123);
-                AWTInputBridge.sendKey((char)Character.toUpperCase(event.getUnicodeChar()),(char)Character.toUpperCase(event.getUnicodeChar()));
-                // Send shift key.. only problem is then you're stuck shifted.
-                // AWTInputBridge.sendKey((char)0x10,(char)Character.toUpperCase(event.getUnicodeChar()),0,0x10);
-            } else if((char)event.getUnicodeChar() == Character.toLowerCase((char)event.getUnicodeChar())){
-                AWTInputBridge.sendKey((char)Character.toUpperCase(event.getUnicodeChar()),(char)Character.toUpperCase(event.getUnicodeChar()));
-            } else {
-                AWTInputBridge.sendKey((char)event.getUnicodeChar(),event.getUnicodeChar());
-            }
+            KeyEncoder.sendEncodedChar((char)event.getUnicodeChar());
         }
         return true;
     }
@@ -427,13 +327,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         );
     }
 
-    void sendScaledMousePositionStretch(float x, float y){
-        AWTInputBridge.sendMousePos(
-                (int) map(x,0,CallbackBridge.physicalWidth, scaleFactors[0]*1.17F, scaleFactors[2]*1.17F),
-                (int) map(y,0,CallbackBridge.physicalHeight, scaleFactors[1], scaleFactors[3])
-        );
-    }
-
     public void toggleVirtualMouse(View v) {
         isVirtualMouseEnabled = !isVirtualMouseEnabled;
         touchPad.setVisibility(isVirtualMouseEnabled ? View.GONE : View.VISIBLE);
@@ -452,7 +345,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         // Load saved username and password
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String name = preferences.getString("username","");
-        String pass= preferences.getString("password","");
+        String pass = preferences.getString("password","");
 
         try {
             JREUtils.jreReleaseList = JREUtils.readJREReleaseProperties();
