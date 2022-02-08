@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AsyncPlayer;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.*;
 import android.os.Vibrator;
@@ -26,8 +28,6 @@ import static net.kdt.pojavlaunch.Tools.getFileName;
 import static net.kdt.pojavlaunch.utils.MathUtils.map;
 
 import androidx.preference.PreferenceManager;
-
-import com.kdt.LoggerView;
 
 public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTouchListener {
     
@@ -220,10 +220,9 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             placeMouseAt(CallbackBridge.physicalWidth / 2, CallbackBridge.physicalHeight / 2);
 
 
-            Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.miniclient);
+            Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.test);
             final File miniclient = new File(getCacheDir(), getFileName(this, uri));
-            final File config = new File(getFilesDir(), "config.json");
-            final String javaArgs = getIntent().getExtras().getString("javaArgs");
+            final File config = new File(getFilesDir(), "test2.ogg");
 
             mTextureView = findViewById(R.id.installmod_surfaceview);
             mTextureView.setOnTouchListener((v, event) -> {
@@ -248,7 +247,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             });
             new Thread(() -> {
                 try {
-                    launchJavaRuntime(miniclient, javaArgs, config);
+                    launchJavaRuntime(miniclient, null, config);
                 } catch (Throwable e) {
                     Tools.showError(JavaGUILauncherActivity.this, e);
                 }
@@ -340,6 +339,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     }
 
     public int launchJavaRuntime(File miniclient, String javaArgs,File config) {
+
         JREUtils.redirectAndPrintJRELog(this);
 
         // Load saved username and password
@@ -349,7 +349,12 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
         try {
             JREUtils.jreReleaseList = JREUtils.readJREReleaseProperties();
-            
+
+            // Background Music
+            //Uri t = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.t1);
+            //AsyncPlayer ap=new AsyncPlayer("Background-Music");
+            //ap.play(this, t, false, AudioManager.STREAM_MUSIC);
+
             List<String> javaArgList = new ArrayList<String>();
 
             // Enable Caciocavallo

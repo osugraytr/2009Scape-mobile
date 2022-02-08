@@ -43,13 +43,10 @@ import java.io.InputStream;
 public class PojavLoginActivity extends BaseActivity {
     private final Object mLockStoragePerm = new Object();
     private final Object mLockSelectJRE = new Object();
-    
-    private EditText edit2, edit3;
+
     private final int REQUEST_STORAGE_REQUEST_CODE = 1;
-    private CheckBox sRemember, sOffline;
     private TextView startupTextView;
-    private SharedPreferences firstLaunchPrefs;
-    
+
     private boolean isSkipInit = false;
     private boolean isStarting = false;
 
@@ -63,7 +60,7 @@ public class PojavLoginActivity extends BaseActivity {
             isSkipInit = savedInstanceState.getBoolean("isSkipInit");
         }
         Tools.updateWindowSize(this);
-        firstLaunchPrefs = getSharedPreferences("pojav_extract", MODE_PRIVATE);
+        SharedPreferences firstLaunchPrefs = getSharedPreferences("pojav_extract", MODE_PRIVATE);
         new Thread(new InitRunnable()).start();
         // If we get here that's because the client was closed.
         // having this here causes the app to close its activity when installing jdk.
@@ -145,21 +142,11 @@ public class PojavLoginActivity extends BaseActivity {
     }
     private void uiInit() {
         setContentView(R.layout.launcher_main_v4);
-        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.miniclient);
         Thread t = new Thread(()->{
-            try {
-                final File miniclient = new File(getCacheDir(), getFileName(this, uri));
-                FileOutputStream fos = new FileOutputStream(miniclient);
-                IOUtils.copy(getContentResolver().openInputStream(uri), fos);
-                fos.close();
-                PojavLoginActivity.this.runOnUiThread(() -> {
-                    Intent intent = new Intent(PojavLoginActivity.this, JavaGUILauncherActivity.class);
-                    intent.putExtra("miniclient", miniclient);
-                    startActivity(intent);
-                });
-            }catch(IOException e) {
-                //Tools.showError(PojavLoginActivity.this,e);
-            }
+            PojavLoginActivity.this.runOnUiThread(() -> {
+                Intent intent = new Intent(PojavLoginActivity.this, JavaGUILauncherActivity.class);
+                startActivity(intent);
+            });
         });
         t.start();
     }
@@ -211,12 +198,16 @@ public class PojavLoginActivity extends BaseActivity {
         mkdirs(Tools.DIR_GAME_HOME + "/config");
         mkdirs(Tools.CTRLMAP_PATH);
         try {
+            // Copy miniclient to storage
+            Uri rawMiniclient = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.test);
+            final File miniclient = new File(getCacheDir(), getFileName(this, rawMiniclient));
+            FileOutputStream fos = new FileOutputStream(miniclient);
+            IOUtils.copy(getContentResolver().openInputStream(rawMiniclient), fos);
+            fos.close();
+
             Tools.copyAssetFile(this, "components/security/pro-grade.jar", Tools.DIR_DATA, true);
             Tools.copyAssetFile(this, "components/security/java_sandbox.policy", Tools.DIR_DATA, true);
-            Tools.copyAssetFile(this, "options.txt", Tools.DIR_GAME_NEW, false);
-            // TODO: Remove after implement.
-            Tools.copyAssetFile(this, "launcher_profiles.json", Tools.DIR_GAME_NEW, false);
-            Tools.copyAssetFile(this,"resolv.conf",Tools.DIR_DATA, true);
+
             AssetManager am = this.getAssets();
             
             unpackComponent(am, "caciocavallo");
@@ -249,12 +240,12 @@ public class PojavLoginActivity extends BaseActivity {
                         (resid, vararg) -> runOnUiThread(()->{if(startupTextView!=null)startupTextView.setText(getString(resid,vararg));}));
                 MultiRTUtils.postPrepare(PojavLoginActivity.this,"Internal");
 
-                // Copy config.json to writable storage
+                // Copy miniclient config.json to writable storage
                 // https://stackoverflow.com/questions/38590996/copy-xml-from-raw-folder-to-internal-storage-and-use-it-in-android
-                File file = new File(getFilesDir(), "config.json");
+                File file = new File(getFilesDir(), "test2.ogg");
                 try {
                     Context context = getApplicationContext();
-                    InputStream inputStream = context.getResources().openRawResource(R.raw.config);
+                    InputStream inputStream = context.getResources().openRawResource(R.raw.test2);
                     FileOutputStream fileOutputStream = new FileOutputStream(file);
                     byte buf[]=new byte[1024];
                     int len;
@@ -263,7 +254,6 @@ public class PojavLoginActivity extends BaseActivity {
                     }
                     fileOutputStream.close();
                     inputStream.close();
-                    System.out.println("Write to Local");
                 } catch (IOException e1) {}
                 return true;
             }catch (IOException e) {
@@ -273,8 +263,7 @@ public class PojavLoginActivity extends BaseActivity {
         }else return true; // we have at least one runtime, and it's compartible, good to go
     }
 
-    private static boolean mkdirs(String path)
-    {
+    private static boolean mkdirs(String path) {
         File file = new File(path);
         // check necessary???
         if(file.getParentFile().exists())
