@@ -21,12 +21,12 @@ public class KeyEncoder {
     static char backspaceAndroid = 67;
     static char backspaceUnicode = 8;
 
-    public static void sendEncodedChar(char in){
-        if(in == backspaceAndroid){
+    public static void sendEncodedChar(int inInt, char inChar){
+        if(inInt == backspaceAndroid){
             AWTInputBridge.sendKey(backspaceUnicode,backspaceUnicode);
-        } else if(specialChars.contains(""+in)){
+        } else if(specialChars.contains(""+inChar)){
             // Send special character to client
-            char c = in;
+            char c = inChar;
             switch(c){
                 case '!':
                     c = '1';
@@ -89,21 +89,21 @@ public class KeyEncoder {
                     c = '\\';
                     break;
             }
-            if(c != in){
+            if(c != inChar){
                 AWTInputBridge.sendKey(modifier,modifier);
             }
             AWTInputBridge.sendKey(c,c);
-        } else if(Character.isDigit(in)){
-            AWTInputBridge.sendKey(in,in);
-        } else if (in == Character.toUpperCase(in)){
+        } else if(Character.isDigit(inChar)){
+            AWTInputBridge.sendKey(inChar,inChar);
+        } else if (inChar == Character.toUpperCase(inChar)){
             // We send F12 as a modifier to avoid needing to worry about shift.
             // Client takes this modifier and does a toUpperCase().
             AWTInputBridge.sendKey(modifier,modifier);
-            AWTInputBridge.sendKey(Character.toUpperCase(in),Character.toUpperCase(in));
-        } else if(in == Character.toLowerCase(in)){
-            AWTInputBridge.sendKey(Character.toUpperCase(in),Character.toUpperCase(in));
+            AWTInputBridge.sendKey(Character.toUpperCase(inChar),Character.toUpperCase(inChar));
+        } else if(inChar == Character.toLowerCase(inChar)){
+            AWTInputBridge.sendKey(Character.toUpperCase(inChar),Character.toUpperCase(inChar));
         } else {
-            AWTInputBridge.sendKey(in,in);
+            AWTInputBridge.sendKey(inChar,inInt);
         }
     }
 }

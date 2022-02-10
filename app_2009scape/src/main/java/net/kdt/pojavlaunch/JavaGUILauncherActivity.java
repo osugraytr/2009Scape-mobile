@@ -298,7 +298,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if(event.getAction() == KeyEvent.ACTION_DOWN){
-            KeyEncoder.sendEncodedChar((char)event.getUnicodeChar());
+            KeyEncoder.sendEncodedChar(event.getKeyCode(),(char)event.getUnicodeChar());
         }
         return true;
     }
