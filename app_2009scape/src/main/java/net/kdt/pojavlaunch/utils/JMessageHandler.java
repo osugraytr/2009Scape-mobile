@@ -15,7 +15,7 @@ public class JMessageHandler {
                 break;
             case "NEW_EFFECT":
                 // EXAMPLE:    AMESSAGE NEW_EFFECT EFFECT_ID: 2555 EFFECT_VOLUME: 10 EFFECT_DELAY: 0
-                JAudioManager.setEffectVolume(Integer.valueOf(args[5])/10f);
+                JAudioManager.setEffectVolume(Float.valueOf(args[5])/10f);
                 JAudioManager.setEffectTrack(Integer.valueOf(args[3]));
                 break;
             case "MUSIC_VOLUME":
@@ -24,7 +24,7 @@ public class JMessageHandler {
                 break;
             case "EFFECT_VOLUME":
                 // EXAMPLE:     AMESSAGE EFFECT_VOLUME: 10
-                JAudioManager.setEffectVolume(Integer.valueOf(args[2])/10f);
+                JAudioManager.setEffectVolume(Float.valueOf(args[2])/10f);
                 break;
         }
     }

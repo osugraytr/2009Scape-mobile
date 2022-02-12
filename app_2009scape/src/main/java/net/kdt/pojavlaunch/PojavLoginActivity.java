@@ -212,17 +212,6 @@ public class PojavLoginActivity extends BaseActivity {
         mkdirs(Tools.CTRLMAP_PATH);
         try {
             Tools.copyAssetFile(this, "components/security/pro-grade.jar", Tools.DIR_DATA, true);
-
-            // Unpack Music
-            for(int i = 0; i < 645; i++){
-                Tools.copyAssetFile(this, "music/"+i+".ogg", Tools.DIR_DATA + "/music", true);
-            }
-
-            // Unpack Effects
-            for(int i = 0; i < 6749; i++){
-                Tools.copyAssetFile(this, "effects/"+i+".ogg", Tools.DIR_DATA + "/effects", true);
-            }
-
             Tools.copyAssetFile(this, "components/security/java_sandbox.policy", Tools.DIR_DATA, true);
             Tools.copyAssetFile(this, "options.txt", Tools.DIR_GAME_NEW, false);
             // TODO: Remove after implement.
@@ -244,7 +233,7 @@ public class PojavLoginActivity extends BaseActivity {
         }
     }
     private boolean installRuntimeAutomatically(AssetManager am, boolean otherRuntimesAvailable) {
-        /* Check if JRE is included */
+        /* Check if JRE is included, This only runs on first startup. */
         String rt_version = null;
         String current_rt_version = MultiRTUtils.__internal__readBinpackVersion("Internal");
         try {
@@ -259,6 +248,20 @@ public class PojavLoginActivity extends BaseActivity {
                 MultiRTUtils.installRuntimeNamedBinpack(am.open("components/jre/universal.tar.xz"), am.open("components/jre/bin-" + archAsString(Tools.DEVICE_ARCHITECTURE) + ".tar.xz"), "Internal", rt_version,
                         (resid, vararg) -> runOnUiThread(()->{if(startupTextView!=null)startupTextView.setText(getString(resid,vararg));}));
                 MultiRTUtils.postPrepare(PojavLoginActivity.this,"Internal");
+
+                try{
+                    // Unpack Music
+                    for(int i = 0; i < 645; i++){
+                        Tools.copyAssetFile(this, "music/"+i+".ogg", Tools.DIR_DATA + "/music", true);
+                    }
+                    // Unpack Effects
+                    for(int i = 0; i < 6749; i++){
+                        Tools.copyAssetFile(this, "effects/"+i+".ogg", Tools.DIR_DATA + "/effects", true);
+                    }
+                }
+                catch (Exception e){
+                    System.out.println("Error Unpacking Music.");
+                }
 
                 // Copy config.json to writable storage
                 // https://stackoverflow.com/questions/38590996/copy-xml-from-raw-folder-to-internal-storage-and-use-it-in-android
