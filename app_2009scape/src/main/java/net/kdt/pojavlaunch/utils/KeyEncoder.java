@@ -21,12 +21,15 @@ public class KeyEncoder {
     static char backspaceAndroid = 67;
     static char backspaceUnicode = 8;
 
-    public static void sendEncodedChar(int inInt, char inChar){
-        if(inInt == backspaceAndroid){
+    public static void sendEncodedChar(int keyCode, char iC){
+        System.out.println(keyCode);
+        if(keyCode == 75)
+            AWTInputBridge.sendKey((char)222,222);
+        else if(keyCode == backspaceAndroid){
             AWTInputBridge.sendKey(backspaceUnicode,backspaceUnicode);
-        } else if(specialChars.contains(""+inChar)){
+        } else if(specialChars.contains(""+iC)){
             // Send special character to client
-            char c = inChar;
+            char c = iC;
             switch(c){
                 case '!':
                     c = '1';
@@ -89,21 +92,21 @@ public class KeyEncoder {
                     c = '\\';
                     break;
             }
-            if(c != inChar){
+            if(c != iC){
                 AWTInputBridge.sendKey(modifier,modifier);
             }
             AWTInputBridge.sendKey(c,c);
-        } else if(Character.isDigit(inChar)){
-            AWTInputBridge.sendKey(inChar,inChar);
-        } else if (inChar == Character.toUpperCase(inChar)){
+        } else if(Character.isDigit(iC)){
+            AWTInputBridge.sendKey(iC,iC);
+        } else if (iC == Character.toUpperCase(iC)){
             // We send F12 as a modifier to avoid needing to worry about shift.
             // Client takes this modifier and does a toUpperCase().
             AWTInputBridge.sendKey(modifier,modifier);
-            AWTInputBridge.sendKey(Character.toUpperCase(inChar),Character.toUpperCase(inChar));
-        } else if(inChar == Character.toLowerCase(inChar)){
-            AWTInputBridge.sendKey(Character.toUpperCase(inChar),Character.toUpperCase(inChar));
+            AWTInputBridge.sendKey(Character.toUpperCase(iC),Character.toUpperCase(iC));
+        } else if(iC == Character.toLowerCase(iC)){
+            AWTInputBridge.sendKey(Character.toUpperCase(iC),Character.toUpperCase(iC));
         } else {
-            AWTInputBridge.sendKey(inChar,inInt);
+            AWTInputBridge.sendKey(iC,keyCode);
         }
     }
 }

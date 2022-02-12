@@ -27,12 +27,12 @@
         },
         "december_snow": false,
         "right_click_menu": {
+            "background": {
+                "color": "#0fab00",
+                "opacity": "70"
+            },
             "border": {
                 "color": "#FFFFFF",
-                "opacity": "0"
-            },
-            "background": {
-                "color": "#5D5447",
                 "opacity": "255"
             },
             "styles": {

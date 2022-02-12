@@ -2,6 +2,8 @@ package net.kdt.pojavlaunch;
 
 import androidx.annotation.Keep;
 
+import net.kdt.pojavlaunch.utils.JMessageHandler;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -55,6 +57,9 @@ public class Logger {
 
     /** Print the text to the log file, no china censoring there */
     public void appendToLogUnchecked(String text){
+        if(text.contains("AMESSAGE")){
+            JMessageHandler.handleMessage(text);
+        }
         logStream.println(text);
         notifyLogListener(text);
     }

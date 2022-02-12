@@ -1,6 +1,7 @@
 package net.kdt.pojavlaunch;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ import android.widget.*;
 import java.io.*;
 import java.util.*;
 
+import net.kdt.SoundService;
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;
 import net.kdt.pojavlaunch.prefs.*;
 import net.kdt.pojavlaunch.utils.*;
@@ -27,8 +29,6 @@ import static net.kdt.pojavlaunch.utils.MathUtils.map;
 
 import androidx.preference.PreferenceManager;
 
-import com.kdt.LoggerView;
-
 public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTouchListener {
     
     private AWTCanvasView mTextureView;
@@ -36,6 +36,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
 
     private boolean mouseState = false;
+    public static Context conT;
 
     private LinearLayout touchPad;
     private ImageView mousePointer;
@@ -51,6 +52,10 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
     private float scaleFactor;
     public float[] scaleFactors = initScaleFactors();
+
+    public static Context getContext() {
+        return conT;
+    }
 
     public class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
@@ -75,6 +80,14 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
         }
     }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        JAudioManager.muteSound();
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,6 +269,21 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         } catch (Throwable th) {
             Tools.showError(this, th, true);
         }
+
+        // Start the audio service is it's not already running, otherwise it crashes.
+        if(!isMyServiceRunning(SoundService.class)){
+            JAudioManager.init();
+        }
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -340,6 +368,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     }
 
     public int launchJavaRuntime(File miniclient, String javaArgs,File config) {
+        conT = this;
         JREUtils.redirectAndPrintJRELog(this);
 
         // Load saved username and password
@@ -386,6 +415,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     @Override
     public void onResume() {
         super.onResume();
+        JAudioManager.resumeSound();
         final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         final View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(uiOptions);

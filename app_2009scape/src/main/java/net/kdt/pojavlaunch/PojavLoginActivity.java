@@ -4,8 +4,6 @@ import static net.kdt.pojavlaunch.Architecture.archAsString;
 import static net.kdt.pojavlaunch.Tools.getFileName;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -209,9 +207,22 @@ public class PojavLoginActivity extends BaseActivity {
         mkdirs(Tools.DIR_GAME_HOME);
         mkdirs(Tools.DIR_GAME_HOME + "/lwjgl3");
         mkdirs(Tools.DIR_GAME_HOME + "/config");
+        mkdirs(Tools.DIR_DATA + "/music");
+        mkdirs(Tools.DIR_DATA + "/effects");
         mkdirs(Tools.CTRLMAP_PATH);
         try {
             Tools.copyAssetFile(this, "components/security/pro-grade.jar", Tools.DIR_DATA, true);
+
+            // Unpack Music
+            for(int i = 0; i < 645; i++){
+                Tools.copyAssetFile(this, "music/"+i+".ogg", Tools.DIR_DATA + "/music", true);
+            }
+
+            // Unpack Effects
+            for(int i = 0; i < 6749; i++){
+                Tools.copyAssetFile(this, "effects/"+i+".ogg", Tools.DIR_DATA + "/effects", true);
+            }
+
             Tools.copyAssetFile(this, "components/security/java_sandbox.policy", Tools.DIR_DATA, true);
             Tools.copyAssetFile(this, "options.txt", Tools.DIR_GAME_NEW, false);
             // TODO: Remove after implement.
@@ -251,7 +262,7 @@ public class PojavLoginActivity extends BaseActivity {
 
                 // Copy config.json to writable storage
                 // https://stackoverflow.com/questions/38590996/copy-xml-from-raw-folder-to-internal-storage-and-use-it-in-android
-                File file = new File(getFilesDir(), "config.json");
+                File file = new File(getFilesDir(), "raw/config.json");
                 try {
                     Context context = getApplicationContext();
                     InputStream inputStream = context.getResources().openRawResource(R.raw.config);
