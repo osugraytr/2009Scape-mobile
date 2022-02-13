@@ -202,7 +202,7 @@ public class PojavLoginActivity extends BaseActivity {
             }
         }
     }
-    private void initMain() throws Throwable {
+    private void initMain() {
         mkdirs(Tools.DIR_ACCOUNT_NEW);
         mkdirs(Tools.DIR_GAME_HOME);
         mkdirs(Tools.DIR_GAME_HOME + "/lwjgl3");
@@ -249,14 +249,21 @@ public class PojavLoginActivity extends BaseActivity {
                         (resid, vararg) -> runOnUiThread(()->{if(startupTextView!=null)startupTextView.setText(getString(resid,vararg));}));
                 MultiRTUtils.postPrepare(PojavLoginActivity.this,"Internal");
 
+                // Extract predumped sounds
                 try{
                     // Unpack Music
-                    for(int i = 0; i < 645; i++){
+                    int totalSongs = 644;
+                    for(int i = 0; i <= totalSongs; i++){
                         Tools.copyAssetFile(this, "music/"+i+".ogg", Tools.DIR_DATA + "/music", true);
+                        String str = "Song: "+i+".ogg";
+                        runOnUiThread(()->{if(startupTextView!=null)startupTextView.setText(str);});
                     }
-                    // Unpack Effects
-                    for(int i = 0; i < 6749; i++){
+                    // Unpack Sound Effects
+                    int totalsfx = 6749;
+                    for(int i = 0; i <= totalsfx; i++){
                         Tools.copyAssetFile(this, "effects/"+i+".ogg", Tools.DIR_DATA + "/effects", true);
+                        String str = "SFX: "+i+".ogg";
+                        runOnUiThread(()->{if(startupTextView!=null)startupTextView.setText(str);});
                     }
                 }
                 catch (Exception e){

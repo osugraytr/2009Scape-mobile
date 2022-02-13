@@ -10,7 +10,6 @@ import android.os.*;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.*;
-import android.view.View.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
@@ -57,7 +56,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         return conT;
     }
 
-    public class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+    public static class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
@@ -149,88 +148,86 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             params.width = (int) (36 / 100f * LauncherPreferences.PREF_MOUSESCALE);
             params.height = (int) (54 / 100f * LauncherPreferences.PREF_MOUSESCALE);
 
-            touchPad.setOnTouchListener(new OnTouchListener(){
-                    private float prevX, prevY;
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        int action = event.getActionMasked();
+            touchPad.setOnTouchListener((v, event) -> {
+                    int action = event.getActionMasked();
 
-                        if(action == KeyEvent.ACTION_DOWN){
-                            // Reset checks because this is a new tap
-                            longPressTriggered = false;
-                            totalMovement = 0;
-                            touchStart = System.currentTimeMillis();
-                        }
+                    if(action == KeyEvent.ACTION_DOWN){
+                        // Reset checks because this is a new tap
+                        longPressTriggered = false;
+                        totalMovement = 0;
+                        touchStart = System.currentTimeMillis();
+                    }
 
-                        float x = event.getX();
-                        float y = event.getY();
-                        float mouseX = mousePointer.getX();
-                        float mouseY = mousePointer.getY();
+                    float x = event.getX();
+                    float y = event.getY();
+                    float mouseX = mousePointer.getX();
+                    float mouseY = mousePointer.getY();
 
-                        if(event.getHistorySize() > 0) {
-                            prevX = event.getHistoricalX(0);
-                            prevY = event.getHistoricalY(0);
-                        }else{
-                            prevX = x;
-                            prevY = y;
-                        }
+                    float prevX;
+                float prevY;
+                if(event.getHistorySize() > 0) {
+                        prevX = event.getHistoricalX(0);
+                        prevY = event.getHistoricalY(0);
+                    }else{
+                        prevX = x;
+                        prevY = y;
+                    }
 
-                        // Long press
-                        totalMovement += Math.abs(x - prevX) + Math.abs(y - prevY);
-                        if(!longPressTriggered &&
-                            System.currentTimeMillis() - touchStart > 1500 &&
-                            totalMovement < 5
-                        ){
-                            longPressTriggered = true;
-                            Log.i("Longpress: ",""+totalMovement);
-                            AWTInputBridge.sendKey((char)118,118);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                vb.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
-                            } else {
-                                //deprecated in API 26
-                                vb.vibrate(100);
-                            }
-                            return true;
-                        }
-
-                        if (gestureDetector.onTouchEvent(event)) {
-                            sendScaledMousePosition(mouseX,mouseY);
-                            AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
-                            clearRC();
+                    // Long press
+                    totalMovement += Math.abs(x - prevX) + Math.abs(y - prevY);
+                    if(!longPressTriggered &&
+                        System.currentTimeMillis() - touchStart > 1500 &&
+                        totalMovement < 5
+                    ){
+                        longPressTriggered = true;
+                        Log.i("Longpress: ",""+totalMovement);
+                        AWTInputBridge.sendKey((char)118,118);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            vb.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
                         } else {
-                            switch (action) {
-                                case MotionEvent.ACTION_POINTER_DOWN: //Second finger right clicking
-                                    AWTInputBridge.sendKey((char)122,122);
-                                    AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
-                                case MotionEvent.ACTION_UP: // 1
-                                    if(longPressTriggered){
-                                        // Currently a click is needed to end the drag. MB1
-                                        // is not good for banking so MB2 sending instead. Annoying but
-                                        // better than the alternative. other buttons 'MB3' ect same outcome
-                                        // probably should null the click on client if isHeld is true.
-                                        AWTInputBridge.sendKey((char)122,122);
-                                        AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
-                                    }
-                                    break;
-                                case MotionEvent.ACTION_CANCEL: // 3
-                                case MotionEvent.ACTION_POINTER_UP: // 6
-                                    break;
-                                case MotionEvent.ACTION_MOVE: // 2
-                                    // System.out.println("DEBUG: MOUSESPEED"+LauncherPreferences.PREF_MOUSESPEED);
-                                    mouseX = Math.max(0, Math.min(currentDisplayMetrics.widthPixels, mouseX + (x - prevX) * LauncherPreferences.PREF_MOUSESPEED));
-                                    mouseY = Math.max(0, Math.min(currentDisplayMetrics.heightPixels, mouseY + (y - prevY) * LauncherPreferences.PREF_MOUSESPEED));
-                                    placeMouseAt(mouseX, mouseY);
-                                    sendScaledMousePosition(mouseX,mouseY);
-                                    break;
-                            }
+                            //deprecated in API 26
+                            vb.vibrate(100);
                         }
-                        // debugText.setText(CallbackBridge.DEBUG_STRING.toString());
-                        //CallbackBridge.DEBUG_STRING.setLength(0);
                         return true;
                     }
+
+                    if (gestureDetector.onTouchEvent(event)) {
+                        sendScaledMousePosition(mouseX,mouseY);
+                        AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
+                        clearRC();
+                    } else {
+                        switch (action) {
+                            case MotionEvent.ACTION_POINTER_DOWN: //Second finger right clicking
+                                AWTInputBridge.sendKey((char)122,122);
+                                AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
+                            case MotionEvent.ACTION_UP: // 1
+                                if(longPressTriggered){
+                                    // Currently a click is needed to end the drag. MB1
+                                    // is not good for banking so MB2 sending instead. Annoying but
+                                    // better than the alternative. other buttons 'MB3' ect same outcome
+                                    // probably should null the click on client if isHeld is true.
+                                    AWTInputBridge.sendKey((char)122,122);
+                                    AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
+                                }
+                                break;
+                            case MotionEvent.ACTION_CANCEL: // 3
+                            case MotionEvent.ACTION_POINTER_UP: // 6
+                                break;
+                            case MotionEvent.ACTION_MOVE: // 2
+                                // System.out.println("DEBUG: MOUSESPEED"+LauncherPreferences.PREF_MOUSESPEED);
+                                mouseX = Math.max(0, Math.min(currentDisplayMetrics.widthPixels, mouseX + (x - prevX) * LauncherPreferences.PREF_MOUSESPEED));
+                                mouseY = Math.max(0, Math.min(currentDisplayMetrics.heightPixels, mouseY + (y - prevY) * LauncherPreferences.PREF_MOUSESPEED));
+                                placeMouseAt(mouseX, mouseY);
+                                sendScaledMousePosition(mouseX,mouseY);
+                                break;
+                        }
+                    }
+                    // debugText.setText(CallbackBridge.DEBUG_STRING.toString());
+                    //CallbackBridge.DEBUG_STRING.setLength(0);
+                    return true;
                 });
                 
-            placeMouseAt(CallbackBridge.physicalWidth / 2, CallbackBridge.physicalHeight / 2);
+            placeMouseAt(CallbackBridge.physicalWidth / 2f, CallbackBridge.physicalHeight / 2f);
 
 
             Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.miniclient);
@@ -271,15 +268,15 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         }
 
         // Start the audio service is it's not already running, otherwise it crashes.
-        if(!isMyServiceRunning(SoundService.class)){
+        if(!isMyServiceRunning()){
             JAudioManager.init();
         }
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
+    private boolean isMyServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
+            if (SoundService.class.getName().equals(service.service.getClassName())) {
                 return true;
             }
         }
@@ -367,7 +364,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         touchPad.setVisibility(isVirtualMouseEnabled ? View.GONE : View.VISIBLE);
     }
 
-    public int launchJavaRuntime(File miniclient, String javaArgs,File config) {
+    public void launchJavaRuntime(File miniclient, String javaArgs, File config) {
         conT = this;
         JREUtils.redirectAndPrintJRELog(this);
 
@@ -379,7 +376,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         try {
             JREUtils.jreReleaseList = JREUtils.readJREReleaseProperties();
             
-            List<String> javaArgList = new ArrayList<String>();
+            List<String> javaArgList = new ArrayList<>();
 
             // Enable Caciocavallo
             Tools.getCacioJavaArgs(javaArgList,false);
@@ -405,10 +402,9 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             javaArgList.add("-Djava.security.policy=" + Tools.DIR_DATA + "/java_sandbox.policy");
             Collections.reverse(javaArgList);
 
-            return JREUtils.launchJavaVM(this, javaArgList);
+            JREUtils.launchJavaVM(this, javaArgList);
         } catch (Throwable th) {
             Tools.showError(this, th, true);
-            return -1;
         }
     }
 
@@ -434,16 +430,16 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
         float[] scales = new float[4]; //Left, Top, Right, Bottom
 
-        scales[0] = (CallbackBridge.physicalWidth/2);
+        scales[0] = (CallbackBridge.physicalWidth/2f);
         scales[0] -= scales[0]/scaleFactor;
 
-        scales[1] = (CallbackBridge.physicalHeight/2);
+        scales[1] = (CallbackBridge.physicalHeight/2f);
         scales[1] -= scales[1]/scaleFactor;
 
-        scales[2] = (CallbackBridge.physicalWidth/2);
+        scales[2] = (CallbackBridge.physicalWidth/2f);
         scales[2] += scales[2]/scaleFactor;
 
-        scales[3] = (CallbackBridge.physicalHeight/2);
+        scales[3] = (CallbackBridge.physicalHeight/2f);
         scales[3] += scales[3]/scaleFactor;
 
         return scales;
