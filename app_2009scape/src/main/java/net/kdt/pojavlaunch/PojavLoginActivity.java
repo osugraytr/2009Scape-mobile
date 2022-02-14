@@ -213,9 +213,7 @@ public class PojavLoginActivity extends BaseActivity {
         try {
             Tools.copyAssetFile(this, "components/security/pro-grade.jar", Tools.DIR_DATA, true);
             Tools.copyAssetFile(this, "components/security/java_sandbox.policy", Tools.DIR_DATA, true);
-            Tools.copyAssetFile(this, "options.txt", Tools.DIR_GAME_NEW, false);
             // TODO: Remove after implement.
-            Tools.copyAssetFile(this, "launcher_profiles.json", Tools.DIR_GAME_NEW, false);
             Tools.copyAssetFile(this,"resolv.conf",Tools.DIR_DATA, true);
             AssetManager am = this.getAssets();
             
@@ -291,7 +289,7 @@ public class PojavLoginActivity extends BaseActivity {
                 Log.e("JREAuto", "Internal JRE unpack failed", e);
                 return false;
             }
-        }else return true; // we have at least one runtime, and it's compartible, good to go
+        }else return true; // we have at least one runtime, and it's compatible, good to go
     }
 
     private static boolean mkdirs(String path)

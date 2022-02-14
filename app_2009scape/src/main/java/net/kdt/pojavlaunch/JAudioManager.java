@@ -35,13 +35,17 @@ public class JAudioManager {
     }
 
     public static void muteSound(){
-        SoundService.setMusicVolume(0);
-        SoundService.setSFXVolume(0);
+        if (SoundService.isPlayingMusic())
+            SoundService.setMusicVolume(0);
+        if (SoundService.isPlayingSFX())
+            SoundService.setSFXVolume(0);
     }
 
     public static void resumeSound(){
-        setMusicVolume(savedMusicVolume);
-        setEffectVolume(savedEffectVolume);
+        if (SoundService.isPlayingMusic())
+            setMusicVolume(savedMusicVolume);
+        if (SoundService.isPlayingSFX())
+            setEffectVolume(savedEffectVolume);
     }
 
 }

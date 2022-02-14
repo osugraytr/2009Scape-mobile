@@ -46,6 +46,14 @@ public class SoundService extends Service {
         }
     }
 
+    public static boolean isPlayingMusic(){
+        return musicPlayer.isPlaying();
+    }
+
+    public static boolean isPlayingSFX(){
+        return sfxPlayer.isPlaying();
+    }
+
     public static void setSFXTrack(int t) {
         sfxTrack = Uri.fromFile(new File(Tools.DIR_DATA + "/effects/" + t + ".ogg"));
         resetSFXAndPlay();

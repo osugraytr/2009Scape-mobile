@@ -36,6 +36,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
     private boolean mouseState = false;
     public static Context conT;
+    public static boolean isFocused = true;
 
     private LinearLayout touchPad;
     private ImageView mousePointer;
@@ -84,6 +85,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     protected void onPause()
     {
         super.onPause();
+        isFocused = false;
         JAudioManager.muteSound();
     }
 
@@ -411,10 +413,15 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     @Override
     public void onResume() {
         super.onResume();
+        isFocused = true;
         JAudioManager.resumeSound();
         final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         final View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(uiOptions);
+    }
+
+    public static boolean getFocusState(){
+        return isFocused;
     }
 
     float[] initScaleFactors(){
