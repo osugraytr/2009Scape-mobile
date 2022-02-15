@@ -29,7 +29,7 @@ public class SoundService extends Service {
 
     public static void setMusicVolume(float v) {
         musicVolume = v;
-        if(musicPlayer.isPlaying()){
+        if(isPlayingMusic()){
             musicPlayer.setVolume(v,v);
         }
     }
@@ -47,11 +47,23 @@ public class SoundService extends Service {
     }
 
     public static boolean isPlayingMusic(){
-        return musicPlayer.isPlaying();
+        try{
+            return musicPlayer.isPlaying();
+        } catch (IllegalStateException e){
+            System.out.println("musicPlayer was released. Resetting.");
+        }
+        musicPlayer = new MediaPlayer();
+        return false;
     }
 
     public static boolean isPlayingSFX(){
-        return sfxPlayer.isPlaying();
+        try{
+            return sfxPlayer.isPlaying();
+        } catch (IllegalStateException e){
+            System.out.println("musicPlayer was released. Resetting.");
+        }
+        sfxPlayer = new MediaPlayer();
+        return false;
     }
 
     public static void setSFXTrack(int t) {
@@ -61,7 +73,7 @@ public class SoundService extends Service {
 
     public static void setSFXVolume(float v) {
         sfxVolume = v;
-        if(sfxPlayer.isPlaying()){
+        if(isPlayingSFX()){
             sfxPlayer.setVolume(v,v);
         }
     }

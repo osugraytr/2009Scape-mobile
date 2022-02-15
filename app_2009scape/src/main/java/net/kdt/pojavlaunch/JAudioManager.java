@@ -1,5 +1,7 @@
 package net.kdt.pojavlaunch;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 
 import net.kdt.SoundService;
@@ -35,9 +37,7 @@ public class JAudioManager {
     }
 
     public static void muteSound(){
-        if (SoundService.isPlayingMusic())
             SoundService.setMusicVolume(0);
-        if (SoundService.isPlayingSFX())
             SoundService.setSFXVolume(0);
     }
 

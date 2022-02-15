@@ -52,7 +52,7 @@ public class SettingsMenu extends Activity {
         if (requestCode == FILE_SELECT_CODE) {
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
-                File config = new File(getFilesDir(), "raw/config.json");
+                File config = new File(Tools.DIR_DATA, "config.json");
                 try {
                     Log.d("TAG", "Starting copy: " + uri.getPath());
                     InputStream inputStream = getContentResolver().openInputStream(uri);
@@ -64,8 +64,6 @@ public class SettingsMenu extends Activity {
                     }
                     fileOutputStream.close();
                     inputStream.close();
-                    Toast.makeText(this, "Config loaded. Please restart the app.",
-                            Toast.LENGTH_SHORT).show();
                 } catch (IOException e1) {
                     Log.d("error", "Error with file " + e1);
                 }
@@ -94,7 +92,7 @@ public class SettingsMenu extends Activity {
         loadConfig.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 showFileChooser();
-                return true; // if you want to handle the touch event
+                return true;
             }
             return false;
         });

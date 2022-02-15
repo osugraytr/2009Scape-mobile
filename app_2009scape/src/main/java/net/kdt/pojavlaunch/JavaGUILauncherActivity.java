@@ -231,12 +231,6 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 
             placeMouseAt(CallbackBridge.physicalWidth / 2f, CallbackBridge.physicalHeight / 2f);
 
-
-            Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.miniclient);
-            final File miniclient = new File(getCacheDir(), getFileName(this, uri));
-            final File config = new File(getFilesDir(), "config.json");
-            final String javaArgs = getIntent().getExtras().getString("javaArgs");
-
             mTextureView = findViewById(R.id.installmod_surfaceview);
             mTextureView.setOnTouchListener((v, event) -> {
                 scaleGestureDetector.onTouchEvent(event);
@@ -258,6 +252,11 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                 }
                 return true;
             });
+
+            final File miniclient = new File(Tools.DIR_DATA, "miniclient.jar");
+            final File config = new File(Tools.DIR_DATA, "config.json");
+            final String javaArgs = getIntent().getExtras().getString("javaArgs");
+
             new Thread(() -> {
                 try {
                     launchJavaRuntime(miniclient, javaArgs, config);
@@ -270,12 +269,12 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         }
 
         // Start the audio service is it's not already running, otherwise it crashes.
-        if(!isMyServiceRunning()){
+        if(!isSoundServiceRunning()){
             JAudioManager.init();
         }
     }
 
-    private boolean isMyServiceRunning() {
+    private boolean isSoundServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (SoundService.class.getName().equals(service.service.getClassName())) {
@@ -414,14 +413,11 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
     public void onResume() {
         super.onResume();
         isFocused = true;
-        JAudioManager.resumeSound();
+        if(isSoundServiceRunning())
+            JAudioManager.resumeSound();
         final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         final View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(uiOptions);
-    }
-
-    public static boolean getFocusState(){
-        return isFocused;
     }
 
     float[] initScaleFactors(){

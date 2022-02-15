@@ -143,21 +143,13 @@ public class PojavLoginActivity extends BaseActivity {
     }
     private void uiInit() {
         setContentView(R.layout.launcher_main_v4);
-        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.miniclient);
+        final File miniclient = new File(Tools.DIR_DATA, "miniclient.jar");
         Thread t = new Thread(()->{
-            try {
-                final File miniclient = new File(getCacheDir(), getFileName(this, uri));
-                FileOutputStream fos = new FileOutputStream(miniclient);
-                IOUtils.copy(getContentResolver().openInputStream(uri), fos);
-                fos.close();
-                PojavLoginActivity.this.runOnUiThread(() -> {
-                    Intent intent = new Intent(PojavLoginActivity.this, JavaGUILauncherActivity.class);
-                    intent.putExtra("miniclient", miniclient);
-                    startActivity(intent);
-                });
-            }catch(IOException e) {
-                //Tools.showError(PojavLoginActivity.this,e);
-            }
+            PojavLoginActivity.this.runOnUiThread(() -> {
+                Intent intent = new Intent(PojavLoginActivity.this, JavaGUILauncherActivity.class);
+                intent.putExtra("miniclient", miniclient);
+                startActivity(intent);
+            });
         });
         t.start();
     }
@@ -247,6 +239,10 @@ public class PojavLoginActivity extends BaseActivity {
                         (resid, vararg) -> runOnUiThread(()->{if(startupTextView!=null)startupTextView.setText(getString(resid,vararg));}));
                 MultiRTUtils.postPrepare(PojavLoginActivity.this,"Internal");
 
+
+                Tools.copyAssetFile(this,"miniclient.jar",Tools.DIR_DATA, true);
+                Tools.copyAssetFile(this,"config.json",Tools.DIR_DATA, true);
+
                 // Extract predumped sounds
                 try{
                     // Unpack Music
@@ -270,20 +266,6 @@ public class PojavLoginActivity extends BaseActivity {
 
                 // Copy config.json to writable storage
                 // https://stackoverflow.com/questions/38590996/copy-xml-from-raw-folder-to-internal-storage-and-use-it-in-android
-                File file = new File(getFilesDir(), "raw/config.json");
-                try {
-                    Context context = getApplicationContext();
-                    InputStream inputStream = context.getResources().openRawResource(R.raw.config);
-                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    byte buf[]=new byte[1024];
-                    int len;
-                    while((len=inputStream.read(buf))>0) {
-                        fileOutputStream.write(buf,0,len);
-                    }
-                    fileOutputStream.close();
-                    inputStream.close();
-                    System.out.println("Write to Local");
-                } catch (IOException e1) {}
                 return true;
             }catch (IOException e) {
                 Log.e("JREAuto", "Internal JRE unpack failed", e);
