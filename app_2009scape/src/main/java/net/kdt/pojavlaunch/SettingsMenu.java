@@ -64,6 +64,8 @@ public class SettingsMenu extends Activity {
                     }
                     fileOutputStream.close();
                     inputStream.close();
+                    Toast.makeText(this, "Config loaded. Please restart the app.",
+                            Toast.LENGTH_SHORT).show();
                 } catch (IOException e1) {
                     Log.d("error", "Error with file " + e1);
                 }
