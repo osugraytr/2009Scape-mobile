@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
         
-        <activity android:name=".SettingsMenu"></activity>
+        <activity android:name=".SettingsActivity"></activity>
 
         <activity
             android:theme="@style/MenuDialog"
@@ -67,7 +67,7 @@
             </intent-filter>
         </provider>
 
-        <service android:enabled="true" android:name="net.kdt.SoundService" />
+        <service android:enabled="true" android:name=".sound.SoundService" />
 
     </application>
 

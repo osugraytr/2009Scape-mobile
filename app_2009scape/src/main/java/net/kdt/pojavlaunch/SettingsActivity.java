@@ -21,13 +21,14 @@ import androidx.preference.PreferenceManager;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
+import net.kdt.pojavlaunch.utils.Tools;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SettingsMenu extends Activity {
+public class SettingsActivity extends Activity {
 
     private static final int FILE_SELECT_CODE = 0;
 

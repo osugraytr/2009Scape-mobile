@@ -1,4 +1,4 @@
-package net.kdt;
+package net.kdt.pojavlaunch.sound;
 
 import android.app.Service;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
 
-import net.kdt.pojavlaunch.Tools;
+import net.kdt.pojavlaunch.utils.Tools;
 
 import java.io.File;
 import java.io.IOException;

@@ -3,6 +3,7 @@ package net.kdt.pojavlaunch;
 import androidx.annotation.Keep;
 
 import net.kdt.pojavlaunch.utils.JMessageHandler;
+import net.kdt.pojavlaunch.utils.Tools;
 
 import java.io.File;
 import java.io.IOException;

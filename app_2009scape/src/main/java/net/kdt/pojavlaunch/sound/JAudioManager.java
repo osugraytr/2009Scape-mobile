@@ -1,10 +1,8 @@
-package net.kdt.pojavlaunch;
+package net.kdt.pojavlaunch.sound;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 
-import net.kdt.SoundService;
+import net.kdt.pojavlaunch.JavaGUILauncherActivity;
 
 public class JAudioManager {
 

@@ -1,9 +1,9 @@
 package net.kdt.pojavlaunch.utils;
 
-import static net.kdt.pojavlaunch.Architecture.ARCH_X86;
-import static net.kdt.pojavlaunch.Architecture.archAsString;
-import static net.kdt.pojavlaunch.Architecture.is64BitsDevice;
-import static net.kdt.pojavlaunch.Tools.LOCAL_RENDERER;
+import static net.kdt.pojavlaunch.utils.Architecture.ARCH_X86;
+import static net.kdt.pojavlaunch.utils.Architecture.archAsString;
+import static net.kdt.pojavlaunch.utils.Architecture.is64BitsDevice;
+import static net.kdt.pojavlaunch.utils.Tools.LOCAL_RENDERER;
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_GLES_SHRINK_HACK;
 
 import android.app.*;
@@ -11,7 +11,6 @@ import android.content.*;
 import android.os.Build;
 import android.system.*;
 import android.util.*;
-import android.widget.Toast;
 
 import com.oracle.dalvik.*;
 import java.io.*;

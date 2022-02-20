@@ -5,7 +5,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.*;
 import android.os.Vibrator;
 import android.util.Log;
@@ -16,14 +15,14 @@ import android.widget.*;
 import java.io.*;
 import java.util.*;
 
-import net.kdt.SoundService;
+import net.kdt.pojavlaunch.sound.JAudioManager;
+import net.kdt.pojavlaunch.sound.SoundService;
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;
 import net.kdt.pojavlaunch.prefs.*;
 import net.kdt.pojavlaunch.utils.*;
 import org.lwjgl.glfw.*;
 
-import static net.kdt.pojavlaunch.Tools.currentDisplayMetrics;
-import static net.kdt.pojavlaunch.Tools.getFileName;
+import static net.kdt.pojavlaunch.utils.Tools.currentDisplayMetrics;
 import static net.kdt.pojavlaunch.utils.MathUtils.map;
 
 import androidx.preference.PreferenceManager;
@@ -130,7 +129,7 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
             // Launch Settings Popup
             findViewById(R.id.menu).setOnTouchListener((view, motionEvent) -> {
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                    startActivity(new Intent(JavaGUILauncherActivity.this, SettingsMenu.class));
+                    startActivity(new Intent(JavaGUILauncherActivity.this, SettingsActivity.class));
                 }
                 return false;
             });

@@ -7,6 +7,8 @@ import static android.view.MotionEvent.ACTION_POINTER_DOWN;
 import static android.view.MotionEvent.ACTION_POINTER_UP;
 import static android.view.MotionEvent.ACTION_UP;
 
+import net.kdt.pojavlaunch.utils.Tools;
+
 /**
  * Class aiming at better detecting X-tap events regardless of the POINTERS
  * Only uses the least amount of events possible,

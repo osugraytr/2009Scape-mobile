@@ -1,30 +1,20 @@
 package net.kdt.pojavlaunch;
 
-import static net.kdt.pojavlaunch.Architecture.ARCH_X86;
-import static net.kdt.pojavlaunch.Tools.currentDisplayMetrics;
+import static net.kdt.pojavlaunch.utils.Architecture.ARCH_X86;
 
 import static org.lwjgl.glfw.CallbackBridge.sendKeyPress;
-import static org.lwjgl.glfw.CallbackBridge.windowHeight;
-import static org.lwjgl.glfw.CallbackBridge.windowWidth;
 
-import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.*;
 import android.content.pm.PackageManager;
 import android.os.*;
 import android.util.*;
 import android.view.*;
-import android.widget.*;
 
-import androidx.drawerlayout.widget.*;
-import com.google.android.material.navigation.*;
-import com.kdt.LoggerView;
+import net.kdt.pojavlaunch.utils.Tools;
 
 import java.io.*;
 import java.util.*;
-
-import net.kdt.pojavlaunch.prefs.*;
-import org.lwjgl.glfw.*;
 
 public class BaseMainActivity extends BaseActivity {
     public static volatile ClipboardManager GLOBAL_CLIPBOARD;

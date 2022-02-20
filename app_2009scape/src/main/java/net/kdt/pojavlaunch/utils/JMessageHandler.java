@@ -1,6 +1,6 @@
 package net.kdt.pojavlaunch.utils;
 
-import net.kdt.pojavlaunch.JAudioManager;
+import net.kdt.pojavlaunch.sound.JAudioManager;
 import net.kdt.pojavlaunch.JavaGUILauncherActivity;
 
 public class JMessageHandler {

@@ -1,9 +1,10 @@
 package net.kdt.pojavlaunch.prefs;
 
 import android.content.*;
-import net.kdt.pojavlaunch.*;
+
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;
 import net.kdt.pojavlaunch.utils.JREUtils;
+import net.kdt.pojavlaunch.utils.Tools;
 
 public class LauncherPreferences
 {

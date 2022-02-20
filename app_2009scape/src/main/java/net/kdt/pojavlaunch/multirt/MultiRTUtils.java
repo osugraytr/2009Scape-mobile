@@ -4,7 +4,7 @@ import android.content.Context;
 import android.system.Os;
 
 import net.kdt.pojavlaunch.R;
-import net.kdt.pojavlaunch.Tools;
+import net.kdt.pojavlaunch.utils.Tools;
 import net.kdt.pojavlaunch.utils.JREUtils;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;

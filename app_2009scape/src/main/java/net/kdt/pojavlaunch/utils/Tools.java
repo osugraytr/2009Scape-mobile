@@ -1,28 +1,26 @@
-package net.kdt.pojavlaunch;
+package net.kdt.pojavlaunch.utils;
 
 import android.app.*;
 import android.content.*;
 import android.database.Cursor;
 import android.net.*;
 import android.os.*;
-import android.provider.OpenableColumns;
 import android.util.*;
 import com.google.gson.*;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.*;
 import java.util.*;
 import java.util.zip.*;
-import net.kdt.pojavlaunch.utils.*;
 
-import org.apache.commons.codec.binary.Hex;
+import net.kdt.pojavlaunch.BaseMainActivity;
+import net.kdt.pojavlaunch.BuildConfig;
+import net.kdt.pojavlaunch.R;
+
 import org.lwjgl.glfw.*;
 import android.view.*;
 
 import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.P;
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_IGNORE_NOTCH;
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_NOTCH_SIZE;
 

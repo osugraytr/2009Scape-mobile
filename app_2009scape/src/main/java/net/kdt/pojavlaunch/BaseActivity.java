@@ -1,11 +1,8 @@
 package net.kdt.pojavlaunch;
 
-import android.content.*;
 import android.os.*;
 import androidx.appcompat.app.*;
 import net.kdt.pojavlaunch.utils.*;
-
-import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_IGNORE_NOTCH;
 
 public class BaseActivity extends AppCompatActivity
 {

@@ -1,12 +1,12 @@
 package net.kdt.pojavlaunch;
 
-import static net.kdt.pojavlaunch.Tools.getFileName;
-
 import android.app.*;
 import android.content.*;
 import android.view.*;
 
 import androidx.annotation.Nullable;
+
+import net.kdt.pojavlaunch.utils.Tools;
 
 public abstract class BaseLauncherActivity extends BaseActivity {
     protected boolean canBack = false;

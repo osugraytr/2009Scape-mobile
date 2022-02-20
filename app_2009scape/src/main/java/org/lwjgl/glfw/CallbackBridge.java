@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 
 import net.kdt.pojavlaunch.*;
+import net.kdt.pojavlaunch.utils.LWJGLGLFWKeycode;
+
 import android.content.*;
 
 public class CallbackBridge {

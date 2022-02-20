@@ -7,6 +7,7 @@ import android.view.*;
 import android.widget.*;
 import java.io.*;
 import net.kdt.pojavlaunch.*;
+import net.kdt.pojavlaunch.utils.Tools;
 
 import android.graphics.*;
 import androidx.fragment.app.Fragment;

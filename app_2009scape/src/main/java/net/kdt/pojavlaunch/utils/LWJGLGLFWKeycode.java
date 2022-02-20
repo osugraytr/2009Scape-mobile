@@ -28,7 +28,7 @@
  *
  *************************************************************************/
 
-package net.kdt.pojavlaunch;
+package net.kdt.pojavlaunch.utils;
 
 public class LWJGLGLFWKeycode
 {

@@ -14,7 +14,7 @@ import android.webkit.MimeTypeMap;
 import androidx.annotation.Nullable;
 
 import net.kdt.pojavlaunch.R;
-import net.kdt.pojavlaunch.Tools;
+import net.kdt.pojavlaunch.utils.Tools;
 
 import java.io.File;
 import java.io.FileNotFoundException;
