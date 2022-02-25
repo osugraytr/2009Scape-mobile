@@ -1,63 +1,61 @@
 {
-    "ip_management": "play.2009scape.org",
+    "ip_address": "play.2009scape.org",
+    "ip_management" : "play.2009scape.org",
+    "server_port": 43594,
+    "wl_port": 5555,
+    "js5_port": 43593,
     "world": 1,
-    "debug": {
-        "hd_login_region_debug_verbose": false,
-        "npc_debug": false,
-        "hd_login_region_debug": false,
-        "world_map_debug": false,
-        "item_debug": false,
-        "object_debug": false,
-        "cache_debug": false
-    },
+
     "customization": {
-        "slayer": {
-            "color": "#635a38",
-            "opacity": "180",
-            "enabled": true
-        },
         "login_theme": "scape main",
-        "rendering_options": {
-            "skybox": {
-                "skybox_color": "Coming in a future update..."
-            },
-            "technical": {
-                "render_distance_increase": true
-            }
-        },
-        "december_snow": false,
+
         "right_click_menu": {
             "background": {
-                "color": "#0fab00",
-                "opacity": "70"
+                "color": "#5D5447",
+                "opacity": "255"
+            },
+            "title_bar": {
+                "color": "#000000",
+                "opacity": "255",
+                "font_color": "#FFFFFF"
             },
             "border": {
                 "color": "#FFFFFF",
                 "opacity": "255"
             },
             "styles": {
+                "Presets provide default customizations.": "rs3, classic, or custom. custom allows you to define your own values above. Classic is standard 2009.",
                 "presets": "custom",
-                "rs3border": false,
-                "Presets provide default customizations.": "rs3, classic, or custom. custom allows you to define your own values above. Classic is standard 2009."
-            },
-            "title_bar": {
-                "color": "#000000",
-                "font_color": "#FFFFFF",
-                "opacity": "255"
+                "rs3border": false
             }
         },
         "xpdrops": {
+            "enabled": true,
             "drop_mode": 0,
-            "track_mode": 0,
-            "enabled": true
+            "track_mode": 0
         },
-        "launcher": {
-            "closeOnClientLaunch": true,
-            "notifyUpdates": true
+        "slayer": {
+            "enabled": true,
+            "color": "#635a38",
+            "opacity": "180"
+        },
+        "rendering_options": {
+            "technical": {
+                "render_distance_increase": true
+            },
+            "skybox": {
+                "skybox_color" : "Coming in a future update..."
+            }
         }
     },
-    "server_port": 43594,
-    "ip_address": "play.2009scape.org",
-    "wl_port": 5555,
-    "js5_port": 43593
+
+    "debug": {
+        "item_debug": false,
+        "object_debug": false,
+        "npc_debug": false,
+        "hd_login_region_debug": false,
+        "hd_login_region_debug_verbose": false,
+        "cache_debug": false,
+        "world_map_debug": false
+    }
 }
