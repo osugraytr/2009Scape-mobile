@@ -259,9 +259,6 @@ public class PojavLoginActivity extends BaseActivity {
                 catch (Exception e){
                     System.out.println("Error Unpacking Music.");
                 }
-
-                // Copy config.json to writable storage
-                // https://stackoverflow.com/questions/38590996/copy-xml-from-raw-folder-to-internal-storage-and-use-it-in-android
                 return true;
             }catch (IOException e) {
                 Log.e("JREAuto", "Internal JRE unpack failed", e);
