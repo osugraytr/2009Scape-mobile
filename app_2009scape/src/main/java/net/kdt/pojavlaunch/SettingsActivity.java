@@ -91,6 +91,11 @@ public class SettingsActivity extends Activity {
         final SwitchMaterial righthanded = findViewById(R.id.righthanded);
         final SeekBar mouseSpeed = findViewById(R.id.mouseslider);
         final Button loadConfig = findViewById(R.id.loadconfig);
+        final Button saveLogin = findViewById(R.id.savelogin);
+
+        //For storing string value in sharedPreference
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
 
         loadConfig.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -100,9 +105,17 @@ public class SettingsActivity extends Activity {
             return false;
         });
 
-        //For storing string value in sharedPreference
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = preferences.edit();
+        saveLogin.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                editor.putString("password",password.getText().toString());
+                editor.putString("username",username.getText().toString());
+                editor.commit();
+                Toast.makeText(this, "Saved login data. Please restart the app.",
+                        Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            return false;
+        });
 
         // Restore from saved values
         username.setText(preferences.getString("username",""));
@@ -125,6 +138,7 @@ public class SettingsActivity extends Activity {
                 System.out.println("Password: "+password.getText());
                 editor.putString("password",password.getText().toString());
                 editor.commit();
+                return true;
             }
             return false;
         });
@@ -135,7 +149,6 @@ public class SettingsActivity extends Activity {
                 editor.putInt("mousespeed",mouseSpeed.getProgress());
                 editor.commit();
                 LauncherPreferences.PREF_MOUSESPEED = mouseSpeed.getProgress();
-
             }
 
             @Override
