@@ -196,6 +196,8 @@ public class PojavLoginActivity extends BaseActivity {
         mkdirs(Tools.DIR_GAME_HOME + "/lwjgl3");
         mkdirs(Tools.DIR_GAME_HOME + "/config");
         mkdirs(Tools.DIR_DATA + "/music");
+        mkdirs(Tools.DIR_DATA + "/plugins");
+        mkdirs(Tools.DIR_DATA + "/plugins/BasicInputQOL");
         mkdirs(Tools.DIR_DATA + "/effects");
         mkdirs(Tools.CTRLMAP_PATH);
         try {
@@ -236,9 +238,35 @@ public class PojavLoginActivity extends BaseActivity {
                 MultiRTUtils.postPrepare(PojavLoginActivity.this,"Internal");
 
 
-                Tools.copyAssetFile(this,"miniclient.jar",Tools.DIR_DATA, true);
+                Tools.copyAssetFile(this,"rt4.jar",Tools.DIR_DATA,"miniclient.jar", true);
                 Tools.copyAssetFile(this,"config.json",Tools.DIR_DATA, true);
 
+                // MobileClientBindings
+                Tools.copyAssetFile(this, "MobileClientBindings1.0.zip",Tools.DIR_DATA, true);
+                Tools.ZipTool.unzip(new File(Tools.DIR_DATA+ "/MobileClientBindings1.0.zip"),
+                        new File(Tools.DIR_DATA + "/plugins/MobileClientBindings/"));
+
+                // LoginTimer
+                Tools.copyAssetFile(this, "LoginTimer1.2.zip",Tools.DIR_DATA, true);
+                Tools.ZipTool.unzip(new File(Tools.DIR_DATA+ "/LoginTimer1.2.zip"),
+                        new File(Tools.DIR_DATA + "/plugins/LoginTimer/"));
+
+                // RememberMyLogin
+                Tools.copyAssetFile(this, "RememberMyLogin1.0.zip",Tools.DIR_DATA, true);
+                Tools.ZipTool.unzip(new File(Tools.DIR_DATA+ "/RememberMyLogin1.0.zip"),
+                        new File(Tools.DIR_DATA + "/plugins/RememberMyLogin/"));
+
+                // SlayerTrackerPlugin
+                Tools.copyAssetFile(this, "SlayerTrackerPlugin1.0.zip",Tools.DIR_DATA, true);
+                Tools.ZipTool.unzip(new File(Tools.DIR_DATA+ "/SlayerTrackerPlugin1.0.zip"),
+                        new File(Tools.DIR_DATA + "/plugins/SlayerTrackerPlugin/"));
+
+                // XPDropPlugin
+                Tools.copyAssetFile(this, "XPDropPlugin1.2.zip",Tools.DIR_DATA, true);
+                Tools.ZipTool.unzip(new File(Tools.DIR_DATA+ "/XPDropPlugin1.2.zip"),
+                        new File(Tools.DIR_DATA + "/plugins/XPDropPlugin/"));
+
+                /*
                 // Extract predumped sounds
                 try{
                     // Unpack Music
@@ -259,6 +287,7 @@ public class PojavLoginActivity extends BaseActivity {
                 catch (Exception e){
                     System.out.println("Error Unpacking Music.");
                 }
+                 */
                 return true;
             }catch (IOException e) {
                 Log.e("JREAuto", "Internal JRE unpack failed", e);
