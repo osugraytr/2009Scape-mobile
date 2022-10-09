@@ -62,9 +62,9 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
         public boolean onScale(ScaleGestureDetector detector) {
             float scaleFactor = detector.getScaleFactor();
             if (scaleFactor > 1) { //Send F4 To Zoom Out
-                AWTInputBridge.sendKey((char)115,115);
-            } else { //116 F5 To Zoom In
-                AWTInputBridge.sendKey((char)116, 116);
+                AWTInputBridge.sendKey((char)AWTInputEvent.VK_F3, AWTInputEvent.VK_F3);
+            } else { //116 F3 To Zoom In
+                AWTInputBridge.sendKey((char)AWTInputEvent.VK_F4,AWTInputEvent.VK_F4);
             }
             return true;
         }
@@ -182,7 +182,9 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                     ){
                         longPressTriggered = true;
                         Log.i("Longpress: ",""+totalMovement);
-                        AWTInputBridge.sendKey((char)118,118);
+
+                        AWTInputBridge.sendKey((char)AWTInputEvent.VK_F5,AWTInputEvent.VK_F5);
+                        AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             vb.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
                         } else {
@@ -199,16 +201,12 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                     } else {
                         switch (action) {
                             case MotionEvent.ACTION_POINTER_DOWN: //Second finger right clicking
-                                AWTInputBridge.sendKey((char)122,122);
+                                AWTInputBridge.sendKey((char)AWTInputEvent.VK_F11,AWTInputEvent.VK_F11);
                                 AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
                             case MotionEvent.ACTION_UP: // 1
                                 if(longPressTriggered){
-                                    // Currently a click is needed to end the drag. MB1
-                                    // is not good for banking so MB2 sending instead. Annoying but
-                                    // better than the alternative. other buttons 'MB3' ect same outcome
-                                    // probably should null the click on client if isHeld is true.
-                                    AWTInputBridge.sendKey((char)122,122);
-                                    AWTInputBridge.sendMousePress(AWTInputEvent.BUTTON1_DOWN_MASK);
+                                    // End clickdrag
+                                    AWTInputBridge.sendKey((char)AWTInputEvent.VK_F5,AWTInputEvent.VK_F5);
                                 }
                                 break;
                             case MotionEvent.ACTION_CANCEL: // 3
@@ -304,12 +302,12 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
                     break;
                 case R.id.camera:
                     if(!mouseState){ // Camera Mode On
-                        AWTInputBridge.sendKey((char)120,120); // Send F9
+                        AWTInputBridge.sendKey((char)AWTInputEvent.VK_F9,(char)AWTInputEvent.VK_F9); // Send F9
                         v.setBackground(getResources().getDrawable( R.drawable.control_button_pressed ));
                         mouseState = true;
                     }
                     else{ // Camera Mode off
-                        AWTInputBridge.sendKey((char)119,119);
+                        AWTInputBridge.sendKey((char)AWTInputEvent.VK_F8,(char)AWTInputEvent.VK_F8);
                         v.setBackground(getResources().getDrawable( R.drawable.control_button_normal ));
                         mouseState = false;
                     }
@@ -330,13 +328,13 @@ public class JavaGUILauncherActivity extends  BaseActivity implements View.OnTou
 
     private void clearRC(){
         rcState = false;
-        AWTInputBridge.sendKey((char)121,121);
+        AWTInputBridge.sendKey((char)AWTInputEvent.VK_F10,AWTInputEvent.VK_F10);
         findViewById(R.id.mb2).setBackground(getResources().getDrawable( R.drawable.control_button ));
     }
 
     private void activateRC(){
         rcState = true;
-        AWTInputBridge.sendKey((char)122,122);
+        AWTInputBridge.sendKey((char)AWTInputEvent.VK_F11,AWTInputEvent.VK_F11);
         findViewById(R.id.mb2).setBackground(getResources().getDrawable( R.drawable.control_button_pressed ));
     }
 
